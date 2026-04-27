@@ -3,20 +3,24 @@
 /* ============================================================ */
 
 :root {
-  --picker-accent:     #FF2800;
-  --picker-on-accent:  #ffffff;
-  --picker-radius:     22px;
-  --picker-font:       inherit;
-  --picker-shadow:     0 10px 40px rgba(0, 0, 0, 0.15);
+  --picker-accent: #FF2800;
+  --picker-on-accent: #ffffff;
+  --picker-radius: 22px;
+  --picker-font: inherit;
+  --picker-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   --picker-transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 
+  /* Overlay */
+  --picker-overlay-bg: rgba(0, 0, 0, 0.5);
+  --picker-overlay-blur: 20px;
+
   /* Light theme (default) */
-  --picker-bg:         #ffffff;
-  --picker-surface:    #f8fafc;
-  --picker-border:     #e2e8f0;
-  --picker-text:       #0f172a;
+  --picker-bg: #ffffff;
+  --picker-surface: #f8fafc;
+  --picker-border: #e2e8f0;
+  --picker-text: #0f172a;
   --picker-text-muted: #64748b;
-  --picker-day-hover:  #f1f5f9;
+  --picker-day-hover: #f1f5f9;
 }
 
 /* ============================================================ */
@@ -24,22 +28,22 @@
 /* ============================================================ */
 
 .picker-theme-light {
-  --picker-bg: rgba(255, 255, 255, 0.85);
-  --picker-surface: rgba(248, 250, 252, 0.6);
-  --picker-border: rgba(226, 232, 240, 0.8);
+  --picker-bg: #ffffff;
+  --picker-surface: #f8fafc;
+  --picker-border: #e2e8f0;
   --picker-text: #0f172a;
   --picker-text-muted: #64748b;
-  --picker-day-hover: rgba(241, 245, 249, 0.8);
+  --picker-day-hover: #f1f5f9;
   --picker-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
 }
 
 .picker-theme-dark {
-  --picker-bg: rgba(12, 12, 12, 0.85);
-  --picker-surface: rgba(26, 26, 26, 0.6);
-  --picker-border: rgba(38, 38, 38, 0.8);
+  --picker-bg: #0c0c0c;
+  --picker-surface: #1a1a1a;
+  --picker-border: #262626;
   --picker-text: #fafafa;
   --picker-text-muted: #a3a3a3;
-  --picker-day-hover: rgba(31, 31, 31, 0.8);
+  --picker-day-hover: #1f1f1f;
   --picker-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
 }
 
@@ -51,9 +55,9 @@
   position: fixed;
   inset: 0;
   z-index: 999999;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: var(--picker-overlay-bg);
+  backdrop-filter: blur(var(--picker-overlay-blur));
+  -webkit-backdrop-filter: blur(var(--picker-overlay-blur));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -77,8 +81,6 @@
   overflow: hidden;
   box-shadow: var(--picker-shadow);
   font-family: var(--picker-font);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   transform: scale(0.95);
   opacity: 0;
   animation: picker-pop-in var(--picker-transition) forwards;
@@ -167,65 +169,65 @@
 }
 
 /* ============================================================ */
-/* TIME PICKER UI OVERRIDES                                     */
+/* TIME PICKER — library variable mapping                       */
 /* ============================================================ */
 
-/* Map design tokens to timepicker-ui CSS variables */
 .tp-ui-wrapper {
-  --tp-primary:                var(--picker-accent) !important;
-  --tp-on-primary:             var(--picker-on-accent) !important;
-  --tp-primary-container:      var(--picker-accent) !important;
-  --tp-on-primary-container:   var(--picker-on-accent) !important;
-  --tp-bg:                     var(--picker-bg) !important;
-  --tp-surface:                var(--picker-surface) !important;
-  --tp-input-bg:               var(--picker-surface) !important;
-  --tp-surface-hover:          var(--picker-surface) !important;
-  --tp-text:                   var(--picker-text) !important;
-  --tp-text-secondary:         var(--picker-text-muted) !important;
-  --tp-text-type-time:         var(--picker-text-muted) !important;
-  --tp-text-icon:              var(--picker-text-muted) !important;
-  --tp-on-surface:             var(--picker-text) !important;
-  --tp-on-surface-variant:     var(--picker-text-muted) !important;
-  --tp-border:                 var(--picker-border) !important;
-  --tp-outline:                var(--picker-accent) !important;
-  --tp-outline-variant:        var(--picker-border) !important;
-  --tp-am-pm-active:           var(--picker-accent) !important;
-  --tp-am-pm-text-selected:    var(--picker-on-accent) !important;
-  --tp-am-pm-text-unselected:  var(--picker-text-muted) !important;
-  --tp-shadow:                 var(--picker-shadow) !important;
-  --tp-border-radius:          var(--picker-radius) !important;
-  --tp-wheel-selected-color:   var(--picker-accent) !important;
+  --tp-primary:               var(--picker-accent) !important;
+  --tp-on-primary:            var(--picker-on-accent) !important;
+  --tp-primary-container:     var(--picker-accent) !important;
+  --tp-on-primary-container:  var(--picker-on-accent) !important;
+  --tp-bg:                    var(--picker-bg) !important;
+  --tp-surface:               var(--picker-surface) !important;
+  --tp-input-bg:              var(--picker-surface) !important;
+  --tp-surface-hover:         var(--picker-surface) !important;
+  --tp-text:                  var(--picker-text) !important;
+  --tp-text-secondary:        var(--picker-text-muted) !important;
+  --tp-text-type-time:        var(--picker-text-muted) !important;
+  --tp-text-icon:             var(--picker-text-muted) !important;
+  --tp-on-surface:            var(--picker-text) !important;
+  --tp-on-surface-variant:    var(--picker-text-muted) !important;
+  --tp-border:                var(--picker-border) !important;
+  --tp-outline:               var(--picker-accent) !important;
+  --tp-outline-variant:       var(--picker-border) !important;
+  --tp-am-pm-active:          var(--picker-accent) !important;
+  --tp-am-pm-text-selected:   var(--picker-on-accent) !important;
+  --tp-am-pm-text-unselected: var(--picker-text-muted) !important;
+  --tp-shadow:                var(--picker-shadow) !important;
+  --tp-border-radius:         var(--picker-radius) !important;
+  --tp-wheel-selected-color:  var(--picker-accent) !important;
   z-index: 1000000 !important;
   font-family: var(--picker-font) !important;
 }
 
-/* Backdrop — blur matches DatePicker overlay */
+/* TIME PICKER — overlay (matches DatePicker) */
 .tp-ui-modal {
   position: fixed !important;
   inset: 0 !important;
-  background-color: rgba(0, 0, 0, 0.4) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
+  background-color: var(--picker-overlay-bg) !important;
+  backdrop-filter: blur(var(--picker-overlay-blur)) !important;
+  -webkit-backdrop-filter: blur(var(--picker-overlay-blur)) !important;
 }
 
-/* Picker card pop-in animation (preserves library's translate centering) */
-@keyframes tp-wrapper-pop-in {
-  from { transform: translate(-50%, -50%) scale(0.95); opacity: 0; }
-  to   { transform: translate(-50%, -50%) scale(1);    opacity: 1; }
-}
-
+/* TIME PICKER — card */
 .tp-ui-wrapper {
   background: var(--picker-bg) !important;
   border: 1px solid var(--picker-border) !important;
   border-radius: var(--picker-radius) !important;
   box-shadow: var(--picker-shadow) !important;
   overflow: hidden !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
   animation: tp-wrapper-pop-in var(--picker-transition) forwards !important;
 }
 
-/* Header */
+@keyframes tp-wrapper-pop-in {
+  from { transform: translate(-50%, -50%) scale(0.95); opacity: 0; }
+  to   { transform: translate(-50%, -50%) scale(1);    opacity: 1; }
+}
+
+/* ============================================================ */
+/* TIME PICKER — header                                         */
+/* ============================================================ */
+
 .tp-ui-header {
   background: var(--picker-surface) !important;
   border-bottom: 1px solid var(--picker-border) !important;
@@ -239,7 +241,10 @@
 
 .tp-ui-select-time { display: none !important; }
 
-/* Hour / minute boxes */
+/* ============================================================ */
+/* TIME PICKER — hour / minute inputs                          */
+/* ============================================================ */
+
 .tp-ui-hour,
 .tp-ui-minutes {
   background: var(--picker-bg) !important;
@@ -264,7 +269,10 @@
   box-shadow: none !important;
 }
 
-/* Clock face */
+/* ============================================================ */
+/* TIME PICKER — clock face                                     */
+/* ============================================================ */
+
 .tp-ui-clock-face { background: var(--picker-surface) !important; }
 
 .tp-ui-clock-hand,
@@ -275,7 +283,10 @@
 .tp-ui-value-tips.active,
 .tp-ui-value-tips-24h.active { color: var(--picker-on-accent) !important; }
 
-/* AM / PM */
+/* ============================================================ */
+/* TIME PICKER — AM / PM                                        */
+/* ============================================================ */
+
 .tp-ui-am,
 .tp-ui-pm {
   color: var(--picker-text-muted) !important;
@@ -289,7 +300,10 @@
   border-color: var(--picker-accent) !important;
 }
 
-/* Footer */
+/* ============================================================ */
+/* TIME PICKER — footer                                         */
+/* ============================================================ */
+
 .tp-ui-footer {
   border-top: 1px solid var(--picker-border) !important;
   padding: 12px 16px !important;
@@ -305,16 +319,17 @@
   text-transform: uppercase !important;
 }
 
-/* Keyboard / clock toggle */
+/* ============================================================ */
+/* TIME PICKER — keyboard toggle & interactions                 */
+/* ============================================================ */
+
 .tp-ui-keyboard-icon svg,
 .tp-ui-keyboard-icon-mobile svg { fill: var(--picker-text-muted) !important; }
 
 .tp-ui-keyboard-icon-wrapper:hover svg { fill: var(--picker-accent) !important; }
 
-/* Ripple */
 [data-md3-ripple]:before { background: var(--picker-accent) !important; }
 
-/* Focus rings */
 .tp-ui-am:focus-visible,
 .tp-ui-pm:focus-visible,
 .tp-ui-cancel-btn:focus-visible,

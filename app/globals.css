@@ -81,12 +81,21 @@ body { margin: 0; padding: 0; }
   align-items: stretch;
   gap: 10px;
   min-height: 42px;
+  border-bottom: 1px solid var(--bd-border-s); /* Ensure single bottom rule */
   transition: border-color 0.2s;
 }
 .bd-inf-row:focus-within      { border-bottom-color: var(--bd-accent); }
 .bd-inf-row__main             { flex: 1; min-width: 0; display: flex; align-items: stretch; }
 .bd-inf-row__main .bd-date-picker,
 .bd-inf-row__main .bd-time-picker { flex: 1; min-width: 0; }
+
+/* Remove individual borders from children within the row to avoid double borders */
+.bd-inf-row .bd-inf,
+.bd-inf-row .bd-date-picker .bd-inf,
+.bd-inf-row .bd-time-picker .bd-inf {
+  border-bottom: none !important;
+}
+
 .bd-inf-ico {
   display: flex;
   align-items: center;
@@ -296,6 +305,12 @@ html, body { height: 100%; }
   border-bottom: 1px solid #e4e4e7;
   padding: 6px 0;
 }
+/* Ensure no double border in light mode as well */
+.field-row .field-input input,
+.field-row .lp-time-picker input {
+  border-bottom: none !important;
+}
+
 .field-icon {
   display: flex;
   align-items: center;

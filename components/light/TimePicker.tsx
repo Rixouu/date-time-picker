@@ -9,49 +9,84 @@ interface TimePickerProps {
   placeholder?: string;
 }
 
-export default function TimePicker({
-  value,
-  onChange,
-  placeholder = "Select Time",
+export default function TimePicker({ 
+  value, 
+  onChange, 
+  placeholder = "Select Time" 
 }: TimePickerProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const timepickerRef = useRef<TimepickerUI | null>(null);
 
-  const formatDisplayTime = (ts: string): string => {
-    if (!ts) return "";
-    const [hours, minutes] = ts.split(":");
+  // Format time for display (HH:mm -> hh:mm AM/PM)
+  const formatDisplayTime = (timeString: string): string => {
+    if (!timeString) return '';
+    const [hours, minutes] = timeString.split(':');
     const h = parseInt(hours) || 0;
     const m = parseInt(minutes) || 0;
-    const period = h >= 12 ? "PM" : "AM";
-    const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
-    return `${h12.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")} ${period}`;
-  };
-
-  const parseTo24 = (data: ConfirmEventData | UpdateEventData) => {
-    if (!data.hour || !data.minutes) return;
-    const h = parseInt(data.hour);
-    const m = parseInt(data.minutes);
-    let h24 = h;
-    if (data.type === "PM" && h !== 12) h24 = h + 12;
-    else if (data.type === "AM" && h === 12) h24 = 0;
-    onChange(`${h24.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`);
+    
+    const period = h >= 12 ? 'PM' : 'AM';
+    const hour12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+    return `${hour12.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')} ${period}`;
   };
 
   useEffect(() => {
     if (!inputRef.current) return;
 
-    const tp = new TimepickerUI(inputRef.current, {
-      ui: { theme: "m3-green", mobile: false, enableSwitchIcon: true, backdrop: true, animation: true },
-      clock: { type: "12h", incrementMinutes: 5, autoSwitchToMinutes: true },
-      callbacks: { onConfirm: parseTo24, onUpdate: parseTo24 },
+    // Initialize timepicker
+    const timepicker = new TimepickerUI(inputRef.current, {
+      ui: {
+        theme: 'm3-green', // Material Design 3 theme
+        mobile: false, // Will auto-detect based on screen size
+        enableSwitchIcon: true, // Allow switching between mobile/desktop
+        backdrop: true,
+        animation: true,
+      },
+      clock: {
+        type: '12h', // 12-hour format
+        incrementMinutes: 5, // 5-minute increments
+        autoSwitchToMinutes: true, // Auto switch to minutes after selecting hour
+      },
+      callbacks: {
+        onConfirm: (eventData: ConfirmEventData) => {
+          if (eventData.hour && eventData.minutes) {
+            const h = parseInt(eventData.hour);
+            const m = parseInt(eventData.minutes);
+            let h24 = h;
+            if (eventData.type === 'PM' && h !== 12) {
+              h24 = h + 12;
+            } else if (eventData.type === 'AM' && h === 12) {
+              h24 = 0;
+            }
+            const time24h = `${h24.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+            onChange(time24h);
+          }
+        },
+        onUpdate: (eventData: UpdateEventData) => {
+          if (eventData.hour && eventData.minutes) {
+            const h = parseInt(eventData.hour);
+            const m = parseInt(eventData.minutes);
+            let h24 = h;
+            if (eventData.type === 'PM' && h !== 12) {
+              h24 = h + 12;
+            } else if (eventData.type === 'AM' && h === 12) {
+              h24 = 0;
+            }
+            const time24h = `${h24.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+            onChange(time24h);
+          }
+        },
+      },
     });
 
-    timepickerRef.current = tp;
-    tp.create();
+    timepickerRef.current = timepicker;
+    timepicker.create();
 
     const applyDisplay = (time24: string) => {
       const input = inputRef.current;
-      if (!time24) { if (input) input.value = ""; return; }
+      if (!time24) {
+        if (input) input.value = "";
+        return;
+      }
       const display = formatDisplayTime(time24);
       if (input) input.value = display;
       if (timepickerRef.current) timepickerRef.current.setValue(display);
@@ -66,8 +101,10 @@ export default function TimePicker({
     inputRef.current?.addEventListener("click", handleFocus);
 
     return () => {
-      timepickerRef.current?.destroy();
-      timepickerRef.current = null;
+      if (timepickerRef.current) {
+        timepickerRef.current.destroy();
+        timepickerRef.current = null;
+      }
       inputRef.current?.removeEventListener("focus", handleFocus);
       inputRef.current?.removeEventListener("click", handleFocus);
     };
@@ -78,7 +115,10 @@ export default function TimePicker({
     const run = () => {
       const input = inputRef.current;
       const tp = timepickerRef.current;
-      if (!value) { if (input) input.value = ""; return; }
+      if (!value) {
+        if (input) input.value = "";
+        return;
+      }
       const display = formatDisplayTime(value);
       if (input) input.value = display;
       if (tp) tp.setValue(display);
@@ -90,31 +130,34 @@ export default function TimePicker({
   }, [value]);
 
   return (
-    <div className="lp-time-picker">
+    <div className="booking-time-picker">
       <input
         ref={inputRef}
         type="text"
-        className="lp-time-input"
+        className="booking-time-input"
         placeholder={placeholder}
         readOnly
         style={{
-          width: "100%",
-          background: "transparent",
-          border: "none",
+          width: '100%',
+          height: '32px',
+          border: 'none',
+          backgroundColor: 'transparent',
+          fontSize: '14px',
+          fontWeight: 500,
           padding: 0,
-          fontSize: "14px",
-          fontWeight: 400,
-          color: "#18181b",
-          outline: "none",
-          cursor: "pointer",
-          fontFamily: "inherit",
-          lineHeight: 1.5,
+          outline: 'none',
+          cursor: 'pointer',
+          color: 'inherit',
+          fontFamily: 'inherit',
         }}
       />
       <style jsx global>{`
-        .lp-time-input::placeholder { color: rgba(82, 82, 91, 0.5) !important; font-weight: 300 !important; }
-
-        /* Light theme for timepicker-ui — matching driver-website exactly */
+        .booking-time-input::placeholder {
+          color: #999 !important;
+          font-weight: 500 !important;
+          opacity: 1 !important;
+        }
+        
         html[data-tp-theme="light"] .tp-ui-wrapper[data-theme],
         html[data-tp-theme="light"] .tp-ui-wrapper {
           --tp-primary: #FF2800 !important;
@@ -146,9 +189,12 @@ export default function TimePicker({
           border-radius: 8px !important;
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
           max-width: 400px !important;
+          font-family: inherit !important;
         }
 
-        html[data-tp-theme="light"] .tp-ui-select-time { display: none !important; }
+        html[data-tp-theme="light"] .tp-ui-select-time {
+          display: none !important;
+        }
 
         html[data-tp-theme="light"] .tp-ui-header {
           background: #000000 !important;
@@ -215,10 +261,21 @@ export default function TimePicker({
           background-color: #FF2800 !important;
         }
 
-        html[data-tp-theme="light"] .tp-ui-ok-btn { color: #FF2800 !important; }
-        html[data-tp-theme="light"] .tp-ui-ok-btn:hover { background-color: rgba(255, 40, 0, 0.1) !important; }
-        html[data-tp-theme="light"] .tp-ui-cancel-btn { color: #6c757d !important; }
-        html[data-tp-theme="light"] .tp-ui-cancel-btn:hover { background-color: #f3f4f6 !important; }
+        html[data-tp-theme="light"] .tp-ui-ok-btn {
+          color: #FF2800 !important;
+        }
+
+        html[data-tp-theme="light"] .tp-ui-ok-btn:hover {
+          background-color: rgba(255, 40, 0, 0.1) !important;
+        }
+
+        html[data-tp-theme="light"] .tp-ui-cancel-btn {
+          color: #6c757d !important;
+        }
+
+        html[data-tp-theme="light"] .tp-ui-cancel-btn:hover {
+          background-color: #f3f4f6 !important;
+        }
       `}</style>
     </div>
   );

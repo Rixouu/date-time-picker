@@ -8,146 +8,258 @@ interface DatePickerProps {
   placeholder?: string;
 }
 
-export default function DatePicker({
-  value,
-  onChange,
-  placeholder = "Select Date",
+export default function DatePicker({ 
+  value, 
+  onChange, 
+  placeholder = "Select Date" 
 }: DatePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [mounted, setMounted] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const datePickerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { setMounted(true); }, []);
+  // Handle mounting for portal
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
+  // Parse selected date
   useEffect(() => {
     if (value) {
-      const d = new Date(value);
-      if (!isNaN(d.getTime())) { setSelectedDate(d); setCurrentMonth(d); }
-    } else { setSelectedDate(null); }
+      const date = new Date(value);
+      if (!isNaN(date.getTime())) {
+        setSelectedDate(date);
+        setCurrentMonth(date);
+      }
+    } else {
+      setSelectedDate(null);
+    }
   }, [value]);
 
+  // Date picker handlers
+  const handleDateSelect = (day: number) => {
+    const newDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+    setSelectedDate(newDate);
+    const formattedDate = `${newDate.getFullYear()}-${String(newDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    onChange(formattedDate);
+  };
+
+  const handleOk = () => {
+    setIsOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsOpen(false);
+  };
+
+  const handlePrevMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
+  };
+
+  // Get today's date to disable past dates
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const getDaysInMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-  const getFirstDayOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1).getDay();
+  // Mobile calendar helpers
+  const getDaysInMonth = (date: Date) => {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  };
 
-  const formatDateDisplay = (d: Date | null) => {
-    if (!d) return "";
-    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
+  const getFirstDayOfMonth = (date: Date) => {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  };
+
+  const formatDateDisplay = (date: Date | null) => {
+    if (!date) return '';
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}`;
   };
 
   const formatDisplayValue = () => {
-    if (!value) return "";
-    const d = new Date(value);
-    return isNaN(d.getTime()) ? "" : d.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" });
+    if (value) {
+      const date = new Date(value);
+      if (!isNaN(date.getTime())) {
+        return date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      }
+    }
+    return '';
   };
 
   const isDateDisabled = (day: number) => {
-    const c = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-    c.setHours(0, 0, 0, 0);
-    return c < today;
+    const checkDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+    checkDate.setHours(0, 0, 0, 0);
+    return checkDate < today;
   };
 
-  const isDateSelected = (day: number) =>
-    selectedDate
-      ? selectedDate.getDate() === day &&
-        selectedDate.getMonth() === currentMonth.getMonth() &&
-        selectedDate.getFullYear() === currentMonth.getFullYear()
-      : false;
+  const isDateSelected = (day: number) => {
+    if (!selectedDate) return false;
+    return (
+      selectedDate.getDate() === day &&
+      selectedDate.getMonth() === currentMonth.getMonth() &&
+      selectedDate.getFullYear() === currentMonth.getFullYear()
+    );
+  };
 
   const isToday = (day: number) => {
-    const c = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-    c.setHours(0, 0, 0, 0);
-    return c.getTime() === today.getTime();
+    const checkDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+    checkDate.setHours(0, 0, 0, 0);
+    return checkDate.getTime() === today.getTime();
   };
 
-  const calendarDays = (() => {
+  // Handle overlay click to close (only when clicking backdrop, not calendar content)
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      setIsOpen(false);
+    }
+  };
+
+  // Generate calendar days
+  const generateCalendarDays = () => {
+    const daysInMonth = getDaysInMonth(currentMonth);
+    const firstDay = getFirstDayOfMonth(currentMonth);
     const days: (number | null)[] = [];
-    for (let i = 0; i < getFirstDayOfMonth(currentMonth); i++) days.push(null);
-    for (let d = 1; d <= getDaysInMonth(currentMonth); d++) days.push(d);
+
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < firstDay; i++) {
+      days.push(null);
+    }
+
+    // Add days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(day);
+    }
+
     return days;
-  })();
+  };
 
-  const weekDays = ["S", "M", "T", "W", "T", "F", "S"];
-  const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December",
-  ];
-
-  function handleDateSelect(day: number) {
-    const d = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-    setSelectedDate(d);
-    onChange(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`);
-  }
+  const calendarDays = generateCalendarDays();
+  const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
   return (
-    <div className="lp-date-picker" ref={ref}>
-      <button
-        type="button"
-        className="lp-trigger"
+    <div className="booking-date-picker" ref={datePickerRef}>
+      <div 
+        className="booking-date-input-mobile"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label={placeholder}
+        style={{
+          width: '100%',
+          height: '32px',
+          border: 'none',
+          fontSize: '14px',
+          fontWeight: 500,
+          padding: 0,
+          outline: 'none',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          color: 'inherit',
+        }}
       >
-        {formatDisplayValue() || <span className="lp-placeholder">{placeholder}</span>}
-      </button>
+        {formatDisplayValue() || placeholder}
+      </div>
 
       {isOpen && mounted && createPortal(
-        <div
-          className="lp-overlay"
-          onClick={(e) => { if (e.target === e.currentTarget) setIsOpen(false); }}
+        <div 
+          className="mobile-date-picker-overlay"
+          onClick={handleOverlayClick}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 999999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
-          <div className="lp-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="lp-header">
-              <div className="lp-header-year">{currentMonth.getFullYear()}</div>
-              <div className="lp-header-date">{formatDateDisplay(selectedDate)}</div>
+          <div 
+            className="mobile-date-picker"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'white',
+              borderRadius: '8px',
+              width: '90%',
+              maxWidth: '400px',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
+            }}
+          >
+            {/* Black Header */}
+            <div className="mobile-date-picker-header" style={{ background: '#000000', color: 'white', padding: '20px' }}>
+              <div className="mobile-date-picker-year" style={{ fontSize: '14px', opacity: 0.9 }}>{currentMonth.getFullYear()}</div>
+              <div className="mobile-date-picker-selected" style={{ fontSize: '18px', fontWeight: 600 }}>
+                {formatDateDisplay(selectedDate)}
+              </div>
             </div>
 
-            <div className="lp-calendar">
-              <div className="lp-month-nav">
-                <button
+            {/* Calendar */}
+            <div className="mobile-date-picker-calendar" style={{ padding: '16px' }}>
+              {/* Month Navigation */}
+              <div className="mobile-date-picker-month-nav" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <button 
                   type="button"
-                  aria-label="Previous month"
-                  onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
+                  onClick={handlePrevMonth}
+                  style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: '8px' }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M15 18l-6-6 6-6" />
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2">
+                    <path d="M15 18l-6-6 6-6"/>
                   </svg>
                 </button>
-                <span>{monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}</span>
-                <button
+                <div style={{ fontWeight: 600, color: '#333' }}>
+                  {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+                </div>
+                <button 
                   type="button"
-                  aria-label="Next month"
-                  onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}
+                  onClick={handleNextMonth}
+                  style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: '8px' }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M9 18l6-6-6-6" />
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2">
+                    <path d="M9 18l6-6-6-6"/>
                   </svg>
                 </button>
               </div>
 
-              <div className="lp-weekdays">
-                {weekDays.map((d, i) => <span key={i}>{d}</span>)}
+              {/* Week Days */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: '8px' }}>
+                {weekDays.map((day, index) => (
+                  <div key={index} style={{ textAlign: 'center', fontSize: '12px', fontWeight: 600, color: '#6c757d' }}>{day}</div>
+                ))}
               </div>
 
-              <div className="lp-days">
-                {calendarDays.map((day, i) => {
-                  if (day === null) return <span key={i} className="lp-day lp-day--empty" />;
+              {/* Calendar Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
+                {calendarDays.map((day, index) => {
+                  if (day === null) return <div key={index}></div>;
                   const disabled = isDateDisabled(day);
+                  const selected = isDateSelected(day);
                   return (
                     <button
-                      key={i}
+                      key={index}
                       type="button"
-                      className={[
-                        "lp-day",
-                        isDateSelected(day) ? "lp-day--sel" : "",
-                        isToday(day) ? "lp-day--today" : "",
-                        disabled ? "lp-day--disabled" : "",
-                      ].join(" ")}
+                      style={{
+                        aspectRatio: '1',
+                        border: 'none',
+                        background: selected ? '#FF2800' : 'transparent',
+                        color: selected ? 'white' : disabled ? '#ccc' : '#333',
+                        cursor: disabled ? 'not-allowed' : 'pointer',
+                        borderRadius: '50%',
+                        fontWeight: selected ? 600 : 500,
+                        fontSize: '14px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
                       onClick={() => !disabled && handleDateSelect(day)}
                       disabled={disabled}
                     >
@@ -158,191 +270,27 @@ export default function DatePicker({
               </div>
             </div>
 
-            <div className="lp-actions">
-              <button type="button" className="lp-btn" onClick={() => setIsOpen(false)}>CANCEL</button>
-              <button type="button" className="lp-btn lp-btn--ok" onClick={() => setIsOpen(false)}>OK</button>
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', borderTop: '1px solid #e9ecef', padding: '12px 16px', gap: '12px' }}>
+              <button 
+                type="button"
+                style={{ flex: 1, padding: '12px', border: 'none', background: 'transparent', color: '#6c757d', fontWeight: 600, cursor: 'pointer' }}
+                onClick={handleCancel}
+              >
+                CANCEL
+              </button>
+              <button 
+                type="button"
+                style={{ flex: 1, padding: '12px', border: 'none', background: 'transparent', color: '#FF2800', fontWeight: 600, cursor: 'pointer' }}
+                onClick={handleOk}
+              >
+                OK
+              </button>
             </div>
           </div>
         </div>,
         document.body
       )}
-
-      <style jsx>{`
-        .lp-date-picker { width: 100%; position: relative; }
-
-        .lp-trigger {
-          width: 100%;
-          background: transparent;
-          border: none;
-          padding: 0;
-          font-size: 14px;
-          font-weight: 400;
-          color: #18181b;
-          cursor: pointer;
-          text-align: left;
-          font-family: inherit;
-          line-height: 1.5;
-        }
-
-        .lp-placeholder { color: rgba(82, 82, 91, 0.5); font-weight: 300; }
-
-        .lp-overlay {
-          position: fixed;
-          inset: 0;
-          z-index: 999999;
-          background: rgba(0, 0, 0, 0.45);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 20px;
-        }
-
-        .lp-modal {
-          background: #fff;
-          border: 1px solid #e4e4e7;
-          border-radius: 22px;
-          width: 100%;
-          max-width: 320px;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          box-shadow: 0 14px 36px rgba(15, 23, 42, 0.12);
-          position: relative;
-          z-index: 1000000;
-        }
-
-        .lp-header {
-          background: #f4f4f5;
-          padding: 16px 20px;
-        }
-
-        .lp-header-year {
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          color: #FF2800;
-        }
-
-        .lp-header-date {
-          font-size: 24px;
-          font-weight: 800;
-          color: #18181b;
-          letter-spacing: -0.02em;
-          margin-top: 2px;
-        }
-
-        .lp-calendar { padding: 12px 20px; }
-
-        .lp-month-nav {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 12px;
-        }
-
-        .lp-month-nav button {
-          color: #52525b;
-          width: 32px;
-          height: 32px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          border: 1px solid #e4e4e7;
-          background: #fff;
-          border-radius: 10px;
-          cursor: pointer;
-          transition: border-color 0.15s;
-        }
-
-        .lp-month-nav button:hover { border-color: #FF2800; color: #18181b; }
-
-        .lp-month-nav span {
-          font-size: 14px;
-          font-weight: 600;
-          color: #18181b;
-        }
-
-        .lp-weekdays {
-          display: grid;
-          grid-template-columns: repeat(7, 1fr);
-          text-align: center;
-          margin-bottom: 6px;
-        }
-
-        .lp-weekdays span {
-          font-size: 10px;
-          font-weight: 600;
-          color: #a1a1aa;
-        }
-
-        .lp-days {
-          display: grid;
-          grid-template-columns: repeat(7, 1fr);
-          text-align: center;
-          gap: 2px;
-        }
-
-        .lp-day {
-          width: 36px;
-          height: 36px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 14px;
-          font-weight: 500;
-          color: #18181b;
-          transition: all 0.15s;
-          margin: 0 auto;
-          background: transparent;
-          border: 1px solid #e4e4e7;
-          border-radius: 0;
-          cursor: pointer;
-        }
-
-        .lp-day--empty    { visibility: hidden; border-color: transparent; cursor: default; }
-        .lp-day--disabled { color: #d4d4d8; cursor: not-allowed; border-color: #f4f4f5; }
-        .lp-day--today    { color: #FF2800; font-weight: 700; border-color: rgba(255, 40, 0, 0.35); }
-        .lp-day--sel      { background: #FF2800; color: #fff; border-color: #FF2800; font-weight: 700; border-radius: 0; }
-        .lp-day:not(.lp-day--disabled):not(.lp-day--sel):hover { background: #f4f4f5; border-color: #FF2800; }
-
-        .lp-actions {
-          display: flex;
-          justify-content: flex-end;
-          align-items: center;
-          gap: 12px;
-          padding: 10px 16px;
-          border-top: 1px solid #e4e4e7;
-        }
-
-        .lp-btn {
-          box-sizing: border-box;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          flex: 0 0 110px;
-          width: 110px;
-          min-width: 110px;
-          max-width: 110px;
-          min-height: 36px;
-          max-height: 36px;
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: #52525b;
-          padding: 8px 10px;
-          border: 1px solid #e4e4e7;
-          background: transparent;
-          border-radius: 12px;
-          cursor: pointer;
-          font-family: inherit;
-        }
-
-        .lp-btn:hover         { color: #18181b; }
-        .lp-btn--ok           { color: #fff; background: #FF2800; border-color: #FF2800; }
-        .lp-btn--ok:hover     { background: #ff4d26; border-color: #ff4d26; }
-      `}</style>
     </div>
   );
 }

@@ -5,7 +5,7 @@
 The components were designed and developed by [Jonathan Rycx](https://github.com/Rixouu)
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-18-blue)](https://react.dev/)
+[![React](https://img.shields.io/badge/React-19-blue)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6)](https://www.typescriptlang.org/)
 [![timepicker-ui](https://img.shields.io/badge/timepicker--ui-4-orange)](https://github.com/pglejzer/timepicker-ui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
@@ -47,7 +47,7 @@ Each component manages its own global style overrides (via `styled-jsx global`) 
 ## 🛠 Tech Stack
 
 - **Next.js 16** (App Router, `"use client"`)
-- **React 18** with `createPortal` for overlay rendering
+- **React 19** with `createPortal` for overlay rendering
 - **TypeScript** with fully typed props
 - **timepicker-ui v4** for the Material Design clock face
 - **styled-jsx** scoped and global CSS-in-JS (built into Next.js)

@@ -24,23 +24,23 @@
 /* ============================================================ */
 
 .picker-theme-light {
-  --picker-bg:         #ffffff;
-  --picker-surface:    #f8fafc;
-  --picker-border:     #e2e8f0;
-  --picker-text:       #0f172a;
+  --picker-bg: rgba(255, 255, 255, 0.85);
+  --picker-surface: rgba(248, 250, 252, 0.6);
+  --picker-border: rgba(226, 232, 240, 0.8);
+  --picker-text: #0f172a;
   --picker-text-muted: #64748b;
-  --picker-day-hover:  #f1f5f9;
-  --picker-shadow:     0 10px 40px rgba(0, 0, 0, 0.08);
+  --picker-day-hover: rgba(241, 245, 249, 0.8);
+  --picker-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
 }
 
 .picker-theme-dark {
-  --picker-bg:         #0c0c0c;
-  --picker-surface:    #1a1a1a;
-  --picker-border:     #262626;
-  --picker-text:       #fafafa;
+  --picker-bg: rgba(12, 12, 12, 0.85);
+  --picker-surface: rgba(26, 26, 26, 0.6);
+  --picker-border: rgba(38, 38, 38, 0.8);
+  --picker-text: #fafafa;
   --picker-text-muted: #a3a3a3;
-  --picker-day-hover:  #1f1f1f;
-  --picker-shadow:     0 20px 50px rgba(0, 0, 0, 0.5);
+  --picker-day-hover: rgba(31, 31, 31, 0.8);
+  --picker-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
 }
 
 /* ============================================================ */
@@ -77,6 +77,8 @@
   overflow: hidden;
   box-shadow: var(--picker-shadow);
   font-family: var(--picker-font);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   transform: scale(0.95);
   opacity: 0;
   animation: picker-pop-in var(--picker-transition) forwards;
@@ -218,6 +220,8 @@
   border-radius: var(--picker-radius) !important;
   box-shadow: var(--picker-shadow) !important;
   overflow: hidden !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
   animation: tp-wrapper-pop-in var(--picker-transition) forwards !important;
 }
 

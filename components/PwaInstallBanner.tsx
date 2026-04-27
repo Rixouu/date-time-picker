@@ -123,7 +123,7 @@ export default function PwaInstallBanner() {
     <div className="pwa-banner" role="region" aria-label="Install app">
       {/* Icon */}
       <img
-        src="/icon-192.png"
+        src="/icon-date-time-picker.png"
         alt="Date Time Picker icon"
         width={44}
         height={44}
@@ -239,7 +239,7 @@ export default function PwaInstallBanner() {
 
         .pwa-btn--install {
           padding: 7px 14px;
-          background: #029688;
+          background: #FF2800;
           color: #fff;
           border-radius: 10px;
           font-size: 13px;

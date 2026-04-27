@@ -1,9 +1,7 @@
 "use client";
 import { useState } from "react";
-import LightDatePicker from "@/components/light/DatePicker";
-import LightTimePicker from "@/components/light/TimePicker";
-import DarkDatePicker from "@/components/dark/DatePicker";
-import DarkTimePicker from "@/components/dark/TimePicker";
+import DatePicker from "@/components/ui/picker/DatePicker";
+import TimePicker from "@/components/ui/picker/TimePicker";
 
 const GitHubIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -40,6 +38,8 @@ export default function Home() {
   const [lightTime, setLightTime] = useState("");
   const [darkDate, setDarkDate] = useState("");
   const [darkTime, setDarkTime] = useState("");
+  const [customDate, setCustomDate] = useState("");
+  const [customTime, setCustomTime] = useState("");
 
   return (
     <>
@@ -49,124 +49,118 @@ export default function Home() {
         <div className="panel panel--light">
           <div className="panel-inner">
 
-            {/* Badge */}
-            <div className="badge badge--light">Light Mode</div>
+            <div className="badge badge--light">Light Theme</div>
 
-            {/* Card */}
             <div className="card card--light">
               <div className="card-head">
                 <p className="card-eyebrow">Book your ride</p>
-                <h2 className="card-title">When do you need us?</h2>
+                <h2 className="card-title">Standard Light</h2>
               </div>
 
               <div className="card-fields">
-                <FieldRow icon={<CalIcon />} label="Date">
-                  <LightDatePicker value={lightDate} onChange={setLightDate} placeholder="Select a date" />
+                <FieldRow icon={<div style={{ color: '#FF2800' }}><CalIcon /></div>} label="Date">
+                  <DatePicker value={lightDate} onChange={setLightDate} theme="light" accentColor="#FF2800" />
                 </FieldRow>
-                <FieldRow icon={<ClockIcon />} label="Time">
-                  <LightTimePicker value={lightTime} onChange={setLightTime} placeholder="Select a time" />
+                <FieldRow icon={<div style={{ color: '#FF2800' }}><ClockIcon /></div>} label="Time">
+                  <TimePicker value={lightTime} onChange={setLightTime} theme="light" accentColor="#FF2800" />
                 </FieldRow>
               </div>
 
               {(lightDate || lightTime) ? (
                 <div className="card-result card-result--light">
-                  <span className="result-dot result-dot--light" />
-                  <span>
-                    {[lightDate, lightTime].filter(Boolean).join(" at ")}
-                  </span>
+                  <span className="result-dot" />
+                  <span>{[lightDate, lightTime].filter(Boolean).join(" at ")}</span>
                 </div>
               ) : (
-                <div className="card-hint">Click a field to open the picker</div>
+                <div className="card-hint">Default light mode settings</div>
               )}
 
               <button className="cta cta--light" type="button">Continue</button>
             </div>
 
-            {/* Component label */}
-            <div className="comp-label comp-label--light">
-              <code>components/light/</code>
+            {/* Custom Theme Preview */}
+            <div className="card card--light" style={{ marginTop: '20px', border: '1px solid #e0e7ff', background: '#f8faff', '--picker-accent': '#6366f1' } as React.CSSProperties}>
+              <div className="card-head">
+                <p className="card-eyebrow" style={{ color: '#6366f1' }}>Branding Example</p>
+                <h2 className="card-title">Custom Indigo</h2>
+              </div>
+              <div className="card-fields">
+                <FieldRow icon={<div style={{ color: '#6366f1' }}><CalIcon /></div>} label="Date">
+                  <DatePicker 
+                    value={customDate} 
+                    onChange={setCustomDate} 
+                    theme="light" 
+                    accentColor="#6366f1" 
+                    borderRadius="12px"
+                  />
+                </FieldRow>
+                <FieldRow icon={<div style={{ color: '#6366f1' }}><ClockIcon /></div>} label="Time">
+                  <TimePicker 
+                    value={customTime} 
+                    onChange={setCustomTime} 
+                    theme="light" 
+                    accentColor="#6366f1" 
+                    borderRadius="12px"
+                  />
+                </FieldRow>
+              </div>
+              <button className="cta" style={{ background: '#6366f1', color: 'white' }} type="button">Custom Style</button>
             </div>
           </div>
         </div>
 
         {/* ====== DARK PANEL ====== */}
-        <div className="panel panel--dark bd-page">
+        <div className="panel panel--dark">
           <div className="panel-inner">
 
-            <div className="badge badge--dark">Dark Mode</div>
+            <div className="badge badge--dark">Dark Theme</div>
 
             <div className="card card--dark">
               <div className="card-head">
-                <p className="card-eyebrow card-eyebrow--dark">Book your ride</p>
-                <h2 className="card-title card-title--dark">When do you need us?</h2>
+                <p className="card-eyebrow">Book your ride</p>
+                <h2 className="card-title card-title--dark">Standard Dark</h2>
               </div>
 
               <div className="card-fields card-fields--dark">
-                <div className="bd-inf-row">
-                  <div className="bd-inf-ico">
-                    <CalIcon />
-                  </div>
-                  <div className="bd-inf-row__main">
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div className="dark-field-label">Date</div>
-                      <DarkDatePicker value={darkDate} onChange={setDarkDate} placeholder="Select a date" />
-                    </div>
-                  </div>
-                </div>
-                <div className="bd-inf-row">
-                  <div className="bd-inf-ico">
-                    <ClockIcon />
-                  </div>
-                  <div className="bd-inf-row__main">
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div className="dark-field-label">Time</div>
-                      <DarkTimePicker value={darkTime} onChange={setDarkTime} placeholder="Select a time" />
-                    </div>
-                  </div>
-                </div>
+                <FieldRow icon={<div style={{ color: '#FF2800' }}><CalIcon /></div>} label="Date">
+                  <DatePicker value={darkDate} onChange={setDarkDate} theme="dark" accentColor="#FF2800" />
+                </FieldRow>
+                <FieldRow icon={<div style={{ color: '#FF2800' }}><ClockIcon /></div>} label="Time">
+                  <TimePicker value={darkTime} onChange={setDarkTime} theme="dark" accentColor="#FF2800" />
+                </FieldRow>
               </div>
 
               {(darkDate || darkTime) ? (
                 <div className="card-result card-result--dark">
-                  <span className="result-dot result-dot--dark" />
-                  <span>
-                    {[darkDate, darkTime].filter(Boolean).join(" at ")}
-                  </span>
+                  <span className="result-dot" />
+                  <span>{[darkDate, darkTime].filter(Boolean).join(" at ")}</span>
                 </div>
               ) : (
-                <div className="card-hint card-hint--dark">Click a field to open the picker</div>
+                <div className="card-hint card-hint--dark">Default dark mode settings</div>
               )}
 
               <button className="cta cta--dark" type="button">Continue</button>
             </div>
 
             <div className="comp-label comp-label--dark">
-              <code>components/dark/</code>
+              <code>components/ui/picker/</code>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ====== HEADER OVERLAY ====== */}
       <header className="site-header">
         <div className="site-header-inner">
           <div className="site-logo">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/icon-date-time-picker.png" alt="Date Time Picker" width={28} height={28} />
             <span>date-time-picker</span>
           </div>
-          <a
-            href="https://github.com/Rixouu/date-time-picker"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="github-link"
-          >
+          <a href="https://github.com/Rixouu/date-time-picker" target="_blank" rel="noopener noreferrer" className="github-link">
             <GitHubIcon />
             <span>GitHub</span>
           </a>
         </div>
       </header>
-
     </>
   );
 }

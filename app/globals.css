@@ -3,234 +3,11 @@
 /* ============================================================ */
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0; padding: 0; }
-
-/* ============================================================ */
-/* CSS VARIABLES — Dark theme on :root (portal overlays use it) */
-/* ============================================================ */
-:root {
-  --dj-bg-base:        #050505;
-  --dj-bg-elevated:    #0c0c0c;
-  --dj-bg-card:        #0c0c0c;
-  --dj-bg-card-hover:  #1a1a1a;
-  --dj-bg-mid:         #090909;
-  --dj-text:           #a3a3a3;
-  --dj-text-heading:   #fafafa;
-  --dj-border:         #262626;
-  --dj-border-subtle:  #1f1f1f;
-  --dj-accent:         #ff2800;
-  --dj-accent-soft:    #ff4d26;
-  --dj-accent-muted:   rgba(255, 40, 0, 0.15);
-  --dj-accent-strong:  #e62300;
-  --dj-on-accent:      #ffffff;
-  --dj-black:          #000000;
-  --driver-dark-surface: var(--dj-bg-card);
-}
-
-/* ============================================================ */
-/* DARK PICKER — PAGE TOKENS                                    */
-/* ============================================================ */
-.bd-page {
-  --bd-bg:       var(--dj-bg-base);
-  --bd-bg-el:    var(--dj-bg-elevated);
-  --bd-bg-card:  var(--dj-bg-card);
-  --bd-bg-hover: var(--dj-bg-card-hover);
-  --bd-border:   var(--dj-border);
-  --bd-border-s: var(--dj-border-subtle);
-  --bd-accent:   var(--dj-accent);
-  --bd-accent-s: var(--dj-accent-soft);
-  --bd-accent-m: var(--dj-accent-muted);
-  --bd-text:     var(--dj-text);
-  --bd-text-h:   var(--dj-text-heading);
-  background: var(--bd-bg);
-  color: var(--bd-text-h);
-}
-
-.bd-page *, .bd-page *::before, .bd-page *::after { box-sizing: border-box; }
-.bd-page button { cursor: pointer; font-family: inherit; border: none; background: transparent; }
-.bd-page svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-/* ============================================================ */
-/* DARK PICKER — INPUT                                          */
-/* ============================================================ */
-.bd-inf {
-  display: block;
-  width: 100%;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--bd-border-s);
-  color: var(--bd-text-h);
-  font-size: 14px;
-  font-weight: 300;
-  padding: 9px 0;
-  outline: none;
-  transition: border-color 0.2s;
-  font-family: inherit;
-  -webkit-appearance: none;
-  appearance: none;
-}
-.bd-inf:focus                 { border-bottom-color: var(--bd-accent); }
-.bd-inf::placeholder          { color: rgba(163, 163, 163, 0.45); font-weight: 300; }
-.bd-inf--trigger              { cursor: pointer; }
-.bd-inf-placeholder           { color: rgba(163, 163, 163, 0.45); font-weight: 300; }
-
-/* ============================================================ */
-/* DARK PICKER — ROW LAYOUT                                     */
-/* ============================================================ */
-.bd-inf-row {
-  display: flex;
-  align-items: stretch;
-  gap: 10px;
-  min-height: 42px;
-  border-bottom: 1px solid var(--bd-border-s); /* Ensure single bottom rule */
-  transition: border-color 0.2s;
-}
-.bd-inf-row:focus-within      { border-bottom-color: var(--bd-accent); }
-.bd-inf-row__main             { flex: 1; min-width: 0; display: flex; align-items: stretch; }
-.bd-inf-row__main .bd-date-picker,
-.bd-inf-row__main .bd-time-picker { flex: 1; min-width: 0; }
-
-/* Remove individual borders from children within the row to avoid double borders */
-.bd-inf-row .bd-inf,
-.bd-inf-row .bd-date-picker .bd-inf,
-.bd-inf-row .bd-time-picker .bd-inf {
-  border-bottom: none !important;
-}
-
-.bd-inf-ico {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  flex-shrink: 0;
-  color: var(--bd-accent);
-}
-
-.bd-date-picker               { position: relative; }
-.bd-time-picker               { position: relative; }
-.bd-date-trigger,
-.bd-time-trigger,
-.lp-date-trigger,
-.lp-time-trigger { text-align: left !important; background: transparent !important; }
-
-/* ============================================================ */
-/* DARK DATE PICKER — OVERLAY & MODAL                          */
-/* ============================================================ */
-.bd-dp-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 999999;
-  background: rgba(0, 0, 0, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bd-dp {
-  background: var(--dj-bg-base);
-  border: 1px solid var(--dj-border);
-  width: 320px;
-  max-width: 95vw;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  font-family: inherit;
-  border-radius: 22px;
-  overflow: hidden;
-  --bd-bg:       var(--dj-bg-base);
-  --bd-bg-el:    var(--dj-bg-elevated);
-  --bd-bg-card:  var(--dj-bg-card);
-  --bd-bg-hover: var(--dj-bg-card-hover);
-  --bd-border:   var(--dj-border);
-  --bd-border-s: var(--dj-border-subtle);
-  --bd-accent:   var(--dj-accent);
-  --bd-accent-s: var(--dj-accent-soft);
-  --bd-text:     var(--dj-text);
-  --bd-text-h:   var(--dj-text-heading);
-}
-
-.bd-dp *      { font-family: inherit; }
-.bd-dp button { background: transparent; padding: 0; cursor: pointer; border: none; }
-
-.bd-dp-header   { background: var(--bd-bg-card); padding: 16px 20px; }
-.bd-dp-year     { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bd-accent); }
-.bd-dp-selected { font-size: 24px; font-weight: 800; color: var(--bd-text-h); letter-spacing: -0.02em; margin-top: 2px; }
-
-.bd-dp-calendar { padding: 12px 20px; }
-
-.bd-dp-month-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-.bd-dp-month-nav span   { font-size: 14px; font-weight: 600; color: var(--bd-text-h); }
-.bd-dp-month-nav button {
-  color: var(--bd-text);
-  width: 32px; height: 32px;
-  display: inline-flex; align-items: center; justify-content: center;
-  border: 1px solid var(--bd-border-s);
-  background: var(--bd-bg-card);
-  border-radius: 10px;
-}
-.bd-dp-month-nav button:hover { color: var(--bd-text-h); border-color: var(--bd-accent); }
-
-.bd-dp-weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  margin-bottom: 6px;
-}
-.bd-dp-weekdays span { font-size: 10px; font-weight: 600; color: var(--bd-text); }
-
-.bd-dp-days { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; gap: 2px; }
-
-.bd-dp-day {
-  width: 36px; height: 36px;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 500; color: var(--bd-text-h);
-  transition: all 0.15s;
-  margin: 0 auto;
-  background: transparent;
-  border: 1px solid var(--bd-border-s);
-  border-radius: 0;
-  cursor: pointer;
-}
-.bd-dp-day.is-empty    { visibility: hidden; border-color: transparent; cursor: default; }
-.bd-dp-day.is-disabled { color: rgba(163, 163, 163, 0.2); cursor: not-allowed; border-color: rgba(163, 163, 163, 0.12); }
-.bd-dp-day.is-today    { color: var(--bd-accent); font-weight: 700; border-color: rgba(255, 40, 0, 0.35); }
-.bd-dp-day.is-sel      { background: var(--bd-accent); color: var(--dj-on-accent); border: 1px solid var(--bd-accent); font-weight: 700; }
-.bd-dp-day:not(.is-disabled):not(.is-sel):hover { background: var(--bd-bg-hover); border-color: var(--bd-accent-s); }
-
-.bd-dp-actions {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
-  border-top: 1px solid var(--bd-border-s);
-}
-
-.bd-dp-btn {
-  box-sizing: border-box;
-  display: inline-flex; align-items: center; justify-content: center;
-  flex: 0 0 110px; width: 110px; min-width: 110px; max-width: 110px;
-  min-height: 36px; max-height: 36px;
-  font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--bd-text);
-  padding: 8px 10px;
-  border: 1px solid var(--bd-border-s);
-  background: transparent;
-  border-radius: 12px;
-  cursor: pointer;
-}
-.bd-dp-btn:hover       { color: var(--bd-text-h); }
-.bd-dp-btn.is-ok       { color: var(--dj-on-accent); border-color: var(--bd-accent); background: var(--bd-accent); }
-.bd-dp-btn.is-ok:hover { background: var(--dj-accent-soft); border-color: var(--dj-accent-soft); }
-
-
-/* ============================================================ */
-/* PAGE LAYOUT & COMPONENTS                                     */
-/* ============================================================ */
-
 html, body { height: 100%; }
+
+/* ============================================================ */
+/* PAGE LAYOUT                                                  */
+/* ============================================================ */
 
 .layout {
   display: grid;
@@ -256,6 +33,10 @@ html, body { height: 100%; }
   gap: 20px;
 }
 
+/* ============================================================ */
+/* BADGE                                                        */
+/* ============================================================ */
+
 .badge {
   font-size: 10px;
   font-weight: 700;
@@ -267,6 +48,10 @@ html, body { height: 100%; }
 }
 .badge--light { color: #FF2800; background: rgba(255,40,0,0.08); }
 .badge--dark  { color: #FF2800; background: rgba(255,40,0,0.12); }
+
+/* ============================================================ */
+/* CARD                                                         */
+/* ============================================================ */
 
 .card {
   width: 100%;
@@ -285,6 +70,7 @@ html, body { height: 100%; }
 }
 
 .card-head { padding: 24px 24px 0; }
+
 .card-eyebrow {
   margin: 0 0 4px;
   font-size: 10px;
@@ -293,11 +79,16 @@ html, body { height: 100%; }
   text-transform: uppercase;
   color: #FF2800;
 }
-.card-eyebrow--dark { color: #FF2800; }
+
 .card-title { margin: 0; font-size: 18px; font-weight: 700; color: #18181b; letter-spacing: -0.02em; }
 .card-title--dark { color: #fafafa; }
 
-.card-fields { padding: 20px 24px 4px; display: flex; flex-direction: column; gap: 0; }
+.card-fields { padding: 20px 24px 4px; display: flex; flex-direction: column; }
+.card-fields--dark { padding: 20px 24px 4px; }
+
+/* ============================================================ */
+/* FIELD ROW                                                    */
+/* ============================================================ */
 
 .field-row {
   display: flex;
@@ -308,28 +99,22 @@ html, body { height: 100%; }
   padding: 6px 0;
   transition: border-color 0.2s;
 }
-.field-row:focus-within { border-bottom-color: #FF2800; }
-/* Ensure no double border in light mode as well */
-.field-row .lp-inf,
-.field-row .lp-date-picker .lp-inf,
-.field-row .lp-time-picker .lp-inf {
-  border-bottom: none !important;
-}
+.field-row:focus-within      { border-bottom-color: var(--picker-accent, #FF2800); }
+.card--dark .field-row        { border-bottom-color: #262626; }
 
 .field-icon {
   display: flex;
   align-items: center;
-  color: #FF2800;
   width: 20px;
   flex-shrink: 0;
 }
-.field-main { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+.field-main  { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
 .field-label { font-size: 10px; font-weight: 700; color: #a1a1aa; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2px; }
-.field-input { font-size: 14px; color: #18181b; }
+.field-input { font-size: 14px; }
 
-.card-fields--dark { padding: 20px 24px 4px; }
-.card-fields--dark .bd-inf-row { padding: 6px 0; min-height: 48px; }
-.dark-field-label { font-size: 10px; font-weight: 700; color: rgba(163,163,163,0.6); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2px; }
+/* ============================================================ */
+/* RESULT & HINT                                                */
+/* ============================================================ */
 
 .card-result {
   margin: 12px 24px;
@@ -344,14 +129,14 @@ html, body { height: 100%; }
 .card-result--light { background: #f4f4f5; color: #18181b; }
 .card-result--dark  { background: #050505; color: #fafafa; border: 1px solid #1f1f1f; }
 
-.result-dot {
-  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
-}
-.result-dot--light { background: #FF2800; }
-.result-dot--dark  { background: #FF2800; }
+.result-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; background: #FF2800; }
 
-.card-hint { margin: 12px 24px; font-size: 12px; color: #a1a1aa; }
+.card-hint      { margin: 12px 24px; font-size: 12px; color: #a1a1aa; }
 .card-hint--dark { color: rgba(163,163,163,0.45); }
+
+/* ============================================================ */
+/* CTA BUTTON                                                   */
+/* ============================================================ */
 
 .cta {
   display: block;
@@ -368,23 +153,21 @@ html, body { height: 100%; }
   font-family: inherit;
   transition: opacity 0.15s;
 }
-.cta:hover { opacity: 0.88; }
+.cta:hover  { opacity: 0.88; }
 .cta--light { background: #18181b; color: #fff; }
+.cta--dark  { background: #ffffff; color: #000000; }
 
-/* Fixed specificity and white/black styling for dark mode CTA */
-.bd-page .cta--dark { 
-  background: #ffffff !important; 
-  color: #000000 !important; 
-}
+/* ============================================================ */
+/* COMPONENT LABEL                                              */
+/* ============================================================ */
 
 .comp-label { align-self: flex-start; }
-.comp-label code {
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 6px;
-}
-.comp-label--light code { background: #e4e4e7; color: #52525b; }
-.comp-label--dark  code { background: #1f1f1f; color: #a3a3a3; }
+.comp-label code { font-size: 11px; padding: 3px 8px; border-radius: 6px; }
+.comp-label--dark code { background: #1f1f1f; color: #a3a3a3; }
+
+/* ============================================================ */
+/* SITE HEADER                                                  */
+/* ============================================================ */
 
 .site-header {
   position: fixed;
@@ -408,11 +191,13 @@ html, body { height: 100%; }
   color: #18181b;
   background: rgba(255,255,255,0.88);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   padding: 6px 12px 6px 8px;
   border-radius: 10px;
   border: 1px solid #e4e4e7;
 }
 .site-logo img { border-radius: 6px; }
+
 .github-link {
   display: inline-flex;
   align-items: center;
@@ -420,6 +205,7 @@ html, body { height: 100%; }
   padding: 7px 14px;
   background: rgba(15, 23, 42, 0.88);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: #fff;
   border-radius: 10px;
   font-size: 13px;
@@ -431,4 +217,3 @@ html, body { height: 100%; }
 .github-link:hover { background: rgba(15, 23, 42, 0.98); }
 
 .panel--dark svg { stroke: #a3a3a3; }
-.panel--dark .bd-inf-ico svg { stroke: #FF2800; }

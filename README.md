@@ -1,10 +1,10 @@
 # 📅 Date & Time Picker
 
-**Date & Time Picker** is a set of custom React date and time picker components built for Next.js, available in **light and dark modes**, fully **mobile responsive**, with a custom calendar UI and a Material Design clock powered by [timepicker-ui](https://github.com/pglejzer/timepicker-ui).
+**Date & Time Picker** is a set of custom React date and time picker components built for **Next.js 16**, available in **light and dark modes**, fully **mobile responsive**, with a custom calendar UI and a Material Design clock powered by [timepicker-ui](https://github.com/pglejzer/timepicker-ui).
 
-The components were designed and developed by [Jonathan Rycx](https://github.com/Rixouu), extracted from a production driver booking platform.
+The components were designed and developed by [Jonathan Rycx](https://github.com/Rixouu)
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-18-blue)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6)](https://www.typescriptlang.org/)
 [![timepicker-ui](https://img.shields.io/badge/timepicker--ui-4-orange)](https://github.com/pglejzer/timepicker-ui)
@@ -13,6 +13,7 @@ The components were designed and developed by [Jonathan Rycx](https://github.com
 ## ✨ Key Features
 
 ### 📅 Date Picker
+
 - Custom calendar grid with no native `<input type="date">` quirks
 - Header with accent year label and large bold selected date
 - Month navigation (previous / next)
@@ -21,6 +22,7 @@ The components were designed and developed by [Jonathan Rycx](https://github.com
 - Accent color: `#FF2800`
 
 ### 🕐 Time Picker
+
 - Material Design clock powered by [timepicker-ui](https://github.com/pglejzer/timepicker-ui)
 - 12h format with AM/PM toggle
 - 5-minute increment steps
@@ -28,19 +30,23 @@ The components were designed and developed by [Jonathan Rycx](https://github.com
 - Keyboard input mode via switch icon
 - Value stored as 24h `HH:mm` for easy form handling
 
-### 🌗 Light and Dark Modes
-- **Light** — white calendar, light gray header, red accent, 22px rounded modal
-- **Dark** — dark-first design system with CSS custom properties (`--dj-*` tokens), 22px rounded modal, subtle borders
-- Both modes share identical UX: same interactions, same output format
+### 🌗 Fully Separated Themes
+
+This project provides two completely separate component sets:
+- **Light** — White calendar, light gray header, red accent, colors sourced from the `driver-website` palette.
+- **Dark** — Deep, premium dark mode with high-contrast accents and subtle borders.
+
+Each component manages its own global style overrides (via `styled-jsx global`) using a unique `data-tp-theme` attribute on the `html` element to prevent cross-contamination between light and dark time pickers.
 
 ### 📱 Mobile Responsive
+
 - Modal centered with `position: fixed` and `max-width: 95vw`
 - Calendar grid adapts to narrow viewports
 - Minimum touch target 36px per day cell
 
 ## 🛠 Tech Stack
 
-- **Next.js 15** (App Router, `"use client"`)
+- **Next.js 16** (App Router, `"use client"`)
 - **React 18** with `createPortal` for overlay rendering
 - **TypeScript** with fully typed props
 - **timepicker-ui v4** for the Material Design clock face
@@ -50,6 +56,7 @@ The components were designed and developed by [Jonathan Rycx](https://github.com
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
 - npm / yarn / pnpm
 
@@ -220,12 +227,15 @@ npm run start    # Run production server
 ## 🌟 Design Notes
 
 ### Why `createPortal`?
+
 Both pickers render their modals at `document.body` level to prevent clipping from parent `overflow: hidden` containers, which is common in booking forms inside cards or drawers.
 
 ### Why 24h output for the Time Picker?
+
 The clock displays 12h (friendlier for users) but stores `HH:mm` internally. This is easier to sort, compare, and pass to backends without ambiguity.
 
 ### Dark mode portal and CSS tokens
+
 The dark date picker portal is outside `.bd-page`, so `.bd-dp` re-declares `--bd-*` tokens pointing at `--dj-*` globals on `:root`. No theming library required.
 
 ## 🤝 Contributing

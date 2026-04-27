@@ -61,9 +61,15 @@ export default function TimePicker({
     requestAnimationFrame(() => applyDisplay(value));
     setTimeout(() => applyDisplay(value), 50);
 
+    const handleFocus = () => document.documentElement.setAttribute("data-tp-theme", "light");
+    inputRef.current?.addEventListener("focus", handleFocus);
+    inputRef.current?.addEventListener("click", handleFocus);
+
     return () => {
       timepickerRef.current?.destroy();
       timepickerRef.current = null;
+      inputRef.current?.removeEventListener("focus", handleFocus);
+      inputRef.current?.removeEventListener("click", handleFocus);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -108,101 +114,111 @@ export default function TimePicker({
       <style jsx global>{`
         .lp-time-input::placeholder { color: rgba(82, 82, 91, 0.5) !important; font-weight: 300 !important; }
 
-        /* Light theme for timepicker-ui — matches light DatePicker design */
-        .tp-ui-wrapper[data-theme], .tp-ui-wrapper {
+        /* Light theme for timepicker-ui — matching driver-website exactly */
+        html[data-tp-theme="light"] .tp-ui-wrapper[data-theme],
+        html[data-tp-theme="light"] .tp-ui-wrapper {
           --tp-primary: #FF2800 !important;
           --tp-on-primary: #fff !important;
           --tp-primary-container: #FF2800 !important;
           --tp-on-primary-container: #fff !important;
-          --tp-backdrop: rgba(0, 0, 0, 0.45) !important;
+          --tp-backdrop: rgba(0, 0, 0, 0.5) !important;
           --tp-bg: #fff !important;
-          --tp-surface: #f4f4f5 !important;
-          --tp-surface-hover: rgba(255, 40, 0, 0.06) !important;
-          --tp-input-bg: #f4f4f5 !important;
-          --tp-text: #18181b !important;
+          --tp-surface: #fff !important;
+          --tp-surface-hover: rgba(255, 40, 0, 0.1) !important;
+          --tp-input-bg: #fff !important;
           --tp-am-pm-active: #FF2800 !important;
           --tp-am-pm-text-selected: #fff !important;
-          --tp-am-pm-text-unselected: #52525b !important;
-          --tp-border: #e4e4e7 !important;
+          --tp-am-pm-text-unselected: #333 !important;
+          --tp-border: rgba(255, 255, 255, 0.3) !important;
           --tp-outline: #FF2800 !important;
-          --tp-shadow: 0 14px 36px rgba(15, 23, 42, 0.12) !important;
-          --tp-border-radius: 22px !important;
+          --tp-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+          --tp-border-radius: 8px !important;
         }
 
-        .tp-ui-modal       { background-color: rgba(0, 0, 0, 0.45) !important; z-index: 999999 !important; }
-        .tp-ui-wrapper     { z-index: 1000000 !important; background: #fff !important; border-radius: 22px !important; overflow: hidden !important; border: 1px solid #e4e4e7 !important; box-shadow: 0 14px 36px rgba(15, 23, 42, 0.12) !important; max-width: 320px !important; font-family: inherit !important; }
-        .tp-ui-select-time { display: none !important; }
-
-        /* Header — matches lp-header */
-        .tp-ui-header      { background: #f4f4f5 !important; color: #18181b !important; padding-top: 24px !important; }
-        .tp-ui-header .tp-ui-hour,
-        .tp-ui-header .tp-ui-minutes { color: #18181b !important; font-weight: 800 !important; font-size: clamp(28px, 8vw, 34px) !important; letter-spacing: -0.02em !important; }
-        .tp-ui-header .tp-ui-dots span { background-color: #18181b !important; }
-
-        .tp-ui-body .tp-ui-hour, .tp-ui-body .tp-ui-minutes,
-        .tp-ui-wrapper-time .tp-ui-hour, .tp-ui-wrapper-time .tp-ui-minutes { color: #18181b !important; }
-        .tp-ui-body .tp-ui-dots span,
-        .tp-ui-wrapper-time .tp-ui-dots span                                  { background-color: #18181b !important; }
-
-        .tp-ui-am, .tp-ui-pm                    { background-color: #f4f4f5 !important; color: #52525b !important; border-color: #e4e4e7 !important; }
-        .tp-ui-am:hover, .tp-ui-pm:hover        { background-color: rgba(255, 40, 0, 0.06) !important; }
-        .tp-ui-am.active, .tp-ui-pm.active      { background-color: #FF2800 !important; color: #fff !important; border-color: #FF2800 !important; }
-
-        .tp-ui-hour-time-12.active, .tp-ui-hour-time-24.active,
-        .tp-ui-minutes-time.active              { background-color: #FF2800 !important; color: #fff !important; }
-        .tp-ui-hour.active, .tp-ui-minutes.active { background-color: #FF2800 !important; color: #fff !important; }
-        .tp-ui-clock-hand, .tp-ui-circle-hand, .tp-ui-dot { background-color: #FF2800 !important; }
-
-        /* Footer buttons — fixed width matching lp-btn */
-        .tp-ui-wrapper-btn { display: inline-flex !important; align-items: center !important; justify-content: flex-end !important; gap: 12px !important; }
-        .tp-ui-ok-btn, .tp-ui-cancel-btn {
-          box-sizing: border-box !important;
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          border-radius: 12px !important;
-          font-size: 11px !important;
-          font-weight: 700 !important;
-          letter-spacing: 0.1em !important;
-          text-transform: uppercase !important;
-          padding: 8px 10px !important;
-          width: 110px !important;
-          min-width: 110px !important;
-          max-width: 110px !important;
-          min-height: 36px !important;
-          max-height: 36px !important;
+        html[data-tp-theme="light"] .tp-ui-modal {
+          background-color: rgba(0, 0, 0, 0.5) !important;
+          z-index: 999999 !important;
         }
-        .tp-ui-cancel-btn       { color: #52525b !important; background: transparent !important; border: 1px solid #e4e4e7 !important; }
-        .tp-ui-cancel-btn:hover { color: #18181b !important; }
-        .tp-ui-ok-btn           { color: #fff !important; background: #FF2800 !important; border: 1px solid #FF2800 !important; }
-        .tp-ui-ok-btn:hover     { background: #ff4d26 !important; border-color: #ff4d26 !important; }
 
-        .tp-ui-mobile-clock-wrapper.expanded { height: auto !important; overflow: visible !important; padding-top: 12px !important; padding-bottom: 20px !important; }
-        .tp-ui-body   { background: #fff !important; padding: 0 !important; margin: 0 auto !important; }
-        .tp-ui-footer { background: #fff !important; border-top: 1px solid #e4e4e7 !important; display: flex !important; justify-content: space-between !important; align-items: center !important; gap: 12px !important; padding: 10px 16px !important; }
-        .tp-ui-footer > div:last-child { display: inline-flex !important; align-items: center !important; justify-content: flex-end !important; gap: 12px !important; margin-left: auto !important; }
-        .tp-ui-keyboard-icon-wrapper { display: inline-flex !important; align-items: center !important; justify-content: center !important; margin-right: auto !important; }
-        .tp-ui-keyboard-icon {
-          box-sizing: border-box !important;
-          width: 36px !important; min-width: 36px !important; height: 36px !important; min-height: 36px !important;
-          padding: 0 !important;
-          display: inline-flex !important; align-items: center !important; justify-content: center !important;
-          color: #52525b !important; background: transparent !important;
-          border: 1px solid #e4e4e7 !important; border-radius: 12px !important;
+        html[data-tp-theme="light"] .tp-ui-wrapper {
+          z-index: 1000000 !important;
+          background: white !important;
+          border-radius: 8px !important;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+          max-width: 400px !important;
         }
-        .tp-ui-keyboard-icon:hover { border-color: #FF2800 !important; color: #FF2800 !important; }
-        .tp-ui-keyboard-icon svg, .tp-ui-keyboard-icon svg path { fill: currentColor !important; }
-        .tp-ui-clock-face { background: #f4f4f5 !important; border-radius: 50% !important; aspect-ratio: 1 / 1 !important; }
-        .tp-ui-normalize, .tp-ui-clock-face, .tp-ui-tip, .tp-ui-mobile-clock-wrapper { opacity: 1 !important; filter: none !important; }
-        .tp-ui-clock-face .tp-ui-hour-time-12, .tp-ui-clock-face .tp-ui-hour-time-24,
-        .tp-ui-clock-face .tp-ui-minutes-time, .tp-ui-normalize .tp-ui-hour-time-12,
-        .tp-ui-normalize .tp-ui-hour-time-24, .tp-ui-normalize .tp-ui-minutes-time,
-        span.tp-ui-hour-time-12, span.tp-ui-hour-time-24, span.tp-ui-minutes-time, span.tp-ui-minute-time {
-          color: #18181b !important; opacity: 1 !important; font-weight: 600 !important; font-size: 14px !important;
+
+        html[data-tp-theme="light"] .tp-ui-select-time { display: none !important; }
+
+        html[data-tp-theme="light"] .tp-ui-header {
+          background: #000000 !important;
+          color: white !important;
+          padding-top: 30px !important;
         }
-        .tp-ui-input-time { background: #f4f4f5 !important; color: #18181b !important; border-color: #e4e4e7 !important; }
-        .tp-ui-input-time:focus, .tp-ui-input-time.active { border-color: #FF2800 !important; }
-        .tp-ui-wrapper-time .tp-ui-hour, .tp-ui-wrapper-time .tp-ui-minutes { border-radius: 12px !important; }
+
+        html[data-tp-theme="light"] .tp-ui-header .tp-ui-hour,
+        html[data-tp-theme="light"] .tp-ui-header .tp-ui-minutes {
+          color: white !important;
+        }
+
+        html[data-tp-theme="light"] .tp-ui-header .tp-ui-dots span {
+          background-color: white !important;
+        }
+
+        html[data-tp-theme="light"] .tp-ui-body .tp-ui-hour,
+        html[data-tp-theme="light"] .tp-ui-body .tp-ui-minutes,
+        html[data-tp-theme="light"] .tp-ui-wrapper-time .tp-ui-hour,
+        html[data-tp-theme="light"] .tp-ui-wrapper-time .tp-ui-minutes {
+          color: #333 !important;
+        }
+
+        html[data-tp-theme="light"] .tp-ui-body .tp-ui-dots span,
+        html[data-tp-theme="light"] .tp-ui-wrapper-time .tp-ui-dots span {
+          background-color: #333 !important;
+        }
+
+        html[data-tp-theme="light"] .tp-ui-am,
+        html[data-tp-theme="light"] .tp-ui-pm {
+          background-color: rgba(255, 255, 255, 0.1) !important;
+          color: #333 !important;
+          border-color: rgba(0, 0, 0, 0.15) !important;
+        }
+
+        html[data-tp-theme="light"] .tp-ui-am:hover,
+        html[data-tp-theme="light"] .tp-ui-pm:hover {
+          background-color: rgba(255, 40, 0, 0.08) !important;
+        }
+
+        html[data-tp-theme="light"] .tp-ui-am.active,
+        html[data-tp-theme="light"] .tp-ui-pm.active {
+          background-color: #FF2800 !important;
+          color: white !important;
+          border-color: #FF2800 !important;
+        }
+
+        html[data-tp-theme="light"] .tp-ui-hour-time-12.active,
+        html[data-tp-theme="light"] .tp-ui-hour-time-24.active,
+        html[data-tp-theme="light"] .tp-ui-minutes-time.active {
+          background-color: #FF2800 !important;
+          color: white !important;
+        }
+
+        html[data-tp-theme="light"] .tp-ui-hour.active,
+        html[data-tp-theme="light"] .tp-ui-minutes.active {
+          background-color: #FF2800 !important;
+          color: white !important;
+        }
+
+        html[data-tp-theme="light"] .tp-ui-clock-hand,
+        html[data-tp-theme="light"] .tp-ui-circle-hand,
+        html[data-tp-theme="light"] .tp-ui-dot {
+          background-color: #FF2800 !important;
+        }
+
+        html[data-tp-theme="light"] .tp-ui-ok-btn { color: #FF2800 !important; }
+        html[data-tp-theme="light"] .tp-ui-ok-btn:hover { background-color: rgba(255, 40, 0, 0.1) !important; }
+        html[data-tp-theme="light"] .tp-ui-cancel-btn { color: #6c757d !important; }
+        html[data-tp-theme="light"] .tp-ui-cancel-btn:hover { background-color: #f3f4f6 !important; }
       `}</style>
     </div>
   );

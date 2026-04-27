@@ -136,3 +136,14 @@ npm run typecheck
 ## 📄 License
 
 MIT — Created by [Jonathan Rycx](https://github.com/Rixouu). Free for personal and commercial use.
+
+---
+
+## 🙏 Acknowledgments
+
+- **Next.js Team**: For the state-of-the-art App Router and SSR foundation.
+- **React Team**: For the stable Portal and Concurrent Mode APIs that make complex UI possible.
+- **Tailwind CSS**: For the high-performance design system integration.
+- **timepicker-ui**: For the robust clock-face interaction primitives.
+
+Built with ❤️ for professional-grade React applications.

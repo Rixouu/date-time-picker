@@ -1,28 +1,59 @@
-# 📅 Unified Date & Time Picker
+# 📅 Date & Time Picker
 
-**Date & Time Picker** is a robust, scalable set of custom React components built for **Next.js 16+**. It provides a single unified API for both light and dark modes, with high customizability via design tokens and props.
+**Date & Time Picker** is a high-performance, design-token-driven selection system built for **Next.js 15+**. It provides a premium, unified experience for date and time input with zero-compromise stability and deep customization support.
 
-The components were designed and developed by [Jonathan Rycx](https://github.com/Rixouu)
+The project is led and developed by [Jonathan Rycx](https://github.com/Rixouu), focusing on professional-grade UI components that bridge the gap between complex library logic and clean React state management.
 
-[![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-blue)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6)](https://www.typescriptlang.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+
+---
 
 ## ✨ Key Features
 
-- **Unified API**: One component for all themes (`<DatePicker theme="dark" />`).
-- **Design Token Driven**: Easily change colors, radius, and shadows via CSS variables.
-- **Premium Aesthetics**: Glassmorphism overlays, smooth transitions, and refined typography.
-- **Mobile First**: Fully responsive with touch-friendly targets.
-- **Accessibility**: ARIA labels and keyboard navigation support.
-- **Portal Rendering**: Safely renders at `document.body` to avoid clipping.
+### 📅 Unified Date Engine
+- **Zero-Dependency Calendar**: Custom-built calendar logic ensures full control over rendering and performance.
+- **Portal Rendering**: Safely renders modals at the document root to prevent parent overflow clipping.
+- **Smart Formatting**: Automatic localization and display formatting (DD/MM/YYYY).
+
+### ⏰ Hybrid Time Engine
+- **Stable Wrapper**: Uses a custom "Hybrid Engine" that isolates the `timepicker-ui` DOM from React's reconciliation, preventing the "disappearing field" bugs common in direct wrappers.
+- **Clock-Face Interaction**: Refined touch and mouse support for intuitive hour/minute selection.
+- **Persistent Instance**: Background library instances are recycled to maintain performance during parent re-renders.
+
+### 💎 Premium Visual Design
+- **Glassmorphism**: 20px backdrop-blur overlays with smooth fade-in/pop-in animations.
+- **Design Tokens**: Fully customizable via HSL-based CSS variables in `picker-theme.css`.
+- **Unified API**: A single component handles both light and dark modes via a simple `theme="dark"` prop.
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **React 19**: Utilizing the latest concurrent rendering features.
+- **Next.js 15**: App router architecture for optimized routing and loading.
+- **Tailwind CSS 4**: Modern utility-first styling with high-performance CSS variable integration.
+- **TypeScript 5**: Strict type safety across all component boundaries.
+
+### Libraries
+- **timepicker-ui**: Core engine for clock-face interactions (wrapped in a stable React layer).
+- **Lucide React**: Refined iconography.
+
+---
 
 ## 🚀 Quick Start
+
+### Prerequisites
+- **Node.js 18+**
+- **npm** or **pnpm**
 
 ### Installation
 
 ```bash
+# Install core library dependencies
 npm install timepicker-ui
 ```
 
@@ -32,57 +63,76 @@ npm install timepicker-ui
 import DatePicker from "@/components/ui/picker/DatePicker";
 import TimePicker from "@/components/ui/picker/TimePicker";
 
-export default function MyForm() {
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
+export default function BookingForm() {
+  const [date, setDate] = useState("2024-05-20");
+  const [time, setTime] = useState("14:30");
 
   return (
-    <div>
-      <DatePicker value={date} onChange={setDate} theme="light" />
-      <TimePicker value={time} onChange={setTime} theme="light" />
+    <div className="card">
+      <DatePicker 
+        value={date} 
+        onChange={setDate} 
+        theme="dark" 
+        accentColor="#FF2800" 
+      />
+      <TimePicker 
+        value={time} 
+        onChange={setTime} 
+        theme="dark" 
+        accentColor="#FF2800" 
+      />
     </div>
   );
 }
 ```
 
-## 🎨 Customization
+---
 
-You can customize the components globally via CSS or per-instance via props.
+## 🎨 Design Tokens (Customization)
 
-### Props
+The system is built on a robust token system. You can override global styles in `components/ui/picker/picker-theme.css` or pass props for instance-level overrides.
 
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `theme` | `"light" \| "dark"` | `"light"` | The visual theme. |
-| `accentColor` | `string` | `#FF2800` | The primary brand color. |
-| `borderRadius` | `string` | `22px` | Corner rounding for the modal. |
-| `placeholder` | `string` | `"Select..."` | Input placeholder text. |
+| `theme` | `"light" \| "dark"` | `"light"` | Switches the visual context. |
+| `accentColor` | `string` | `#FF2800` | Overrides the primary brand color. |
+| `borderRadius` | `string` | `22px` | Adjusts the corner rounding of all modals. |
 
-### Design Tokens (CSS Variables)
-
-The system uses CSS variables defined in `picker-theme.css`. You can override these in your global CSS:
-
-```css
-:root {
-  --picker-accent: #6366f1; /* Indigo */
-  --picker-radius: 12px;
-  --picker-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-```
+---
 
 ## 📁 Project Structure
 
 ```
-components/ui/picker/
-├── DatePicker.tsx    # Unified logic & rendering
-├── TimePicker.tsx    # unified timepicker-ui wrapper
-└── picker-theme.css  # Design tokens and theme scopes
+date-time-picker/
+├── app/                  # Next.js App Router pages
+├── components/
+│   └── ui/
+│       └── picker/       # Core Picker System
+│           ├── DatePicker.tsx    # Calendar implementation
+│           ├── TimePicker.tsx    # Hybrid library wrapper
+│           └── picker-theme.css  # Global design tokens
+├── public/               # Static assets & brand icons
+└── tailwind.config.ts    # Design system configuration
 ```
+
+---
+
+## 🏗️ Development Workflow
+
+```bash
+# Run local dev server
+npm run dev
+
+# Build production bundle
+npm run build
+
+# Run linting and type-checking
+npm run lint
+npm run typecheck
+```
+
+---
 
 ## 📄 License
 
-MIT — free to use in personal and commercial projects.
-
-## 👥 Author
-
-**Jonathan Rycx** — [GitHub](https://github.com/Rixouu)
+MIT — Created by [Jonathan Rycx](https://github.com/Rixouu). Free for personal and commercial use.

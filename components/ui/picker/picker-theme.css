@@ -51,19 +51,9 @@
 /* OVERLAY & MODAL (DatePicker)                                 */
 /* ============================================================ */
 
+/* Legacy DatePicker overlay selector (deprecated in favor of .picker-glass-overlay) */
 .picker-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 999999;
-  background: var(--picker-overlay-bg);
-  backdrop-filter: blur(var(--picker-overlay-blur));
-  -webkit-backdrop-filter: blur(var(--picker-overlay-blur));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  opacity: 0;
-  animation: picker-fade-in var(--picker-transition) forwards;
+  display: contents;
 }
 
 @keyframes picker-fade-in {
@@ -201,12 +191,17 @@
 }
 
 /* TIME PICKER — overlay (matches DatePicker) */
-.tp-ui-modal {
+.tp-ui-modal,
+.tp-ui-backdrop,
+.picker-glass-overlay {
   position: fixed !important;
   inset: 0 !important;
-  background-color: var(--picker-overlay-bg) !important;
-  backdrop-filter: blur(var(--picker-overlay-blur)) !important;
-  -webkit-backdrop-filter: blur(var(--picker-overlay-blur)) !important;
+  --tp-backdrop-filter: blur(20px) !important;
+  --tp-backdrop-bg: rgba(0, 0, 0, 0.5) !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  z-index: 999999 !important;
 }
 
 /* TIME PICKER — card */

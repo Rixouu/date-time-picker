@@ -121,9 +121,14 @@ export default function DatePicker({
 
       {isOpen && mounted && createPortal(
         <div
-          className={`picker-overlay picker-theme-${theme}`}
+          className={`picker-glass-overlay picker-theme-${theme}`}
           onClick={(e) => { if (e.target === e.currentTarget) setIsOpen(false); }}
-          style={customStyles}
+          style={{
+            ...customStyles,
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}
         >
           <div className="picker-modal date-picker-modal" role="dialog" aria-modal="true">
             <div className="picker-header">

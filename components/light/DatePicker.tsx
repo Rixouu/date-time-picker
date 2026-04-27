@@ -17,58 +17,40 @@ export default function DatePicker({
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [mounted, setMounted] = useState(false);
-  const datePickerRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (value) {
-      const date = new Date(value);
-      if (!isNaN(date.getTime())) {
-        setSelectedDate(date);
-        setCurrentMonth(date);
-      }
-    } else {
-      setSelectedDate(null);
-    }
+      const d = new Date(value);
+      if (!isNaN(d.getTime())) { setSelectedDate(d); setCurrentMonth(d); }
+    } else { setSelectedDate(null); }
   }, [value]);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const handleDateSelect = (day: number) => {
-    const newDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-    setSelectedDate(newDate);
-    onChange(
-      `${newDate.getFullYear()}-${String(newDate.getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
-    );
-  };
+  const getDaysInMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  const getFirstDayOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1).getDay();
 
-  const getDaysInMonth = (date: Date) =>
-    new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-
-  const getFirstDayOfMonth = (date: Date) =>
-    new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-
-  const formatDateDisplay = (date: Date | null) => {
-    if (!date) return "";
+  const formatDateDisplay = (d: Date | null) => {
+    if (!d) return "";
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    return `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}`;
+    return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
   };
 
   const formatDisplayValue = () => {
     if (!value) return "";
-    const date = new Date(value);
-    return isNaN(date.getTime())
-      ? ""
-      : date.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" });
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? "" : d.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" });
   };
 
   const isDateDisabled = (day: number) => {
-    const check = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-    check.setHours(0, 0, 0, 0);
-    return check < today;
+    const c = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+    c.setHours(0, 0, 0, 0);
+    return c < today;
   };
 
   const isDateSelected = (day: number) =>
@@ -79,30 +61,40 @@ export default function DatePicker({
       : false;
 
   const isToday = (day: number) => {
-    const check = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-    check.setHours(0, 0, 0, 0);
-    return check.getTime() === today.getTime();
+    const c = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+    c.setHours(0, 0, 0, 0);
+    return c.getTime() === today.getTime();
   };
 
-  const generateCalendarDays = () => {
+  const calendarDays = (() => {
     const days: (number | null)[] = [];
     for (let i = 0; i < getFirstDayOfMonth(currentMonth); i++) days.push(null);
     for (let d = 1; d <= getDaysInMonth(currentMonth); d++) days.push(d);
     return days;
-  };
+  })();
 
-  const calendarDays = generateCalendarDays();
   const weekDays = ["S", "M", "T", "W", "T", "F", "S"];
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December",
   ];
 
+  function handleDateSelect(day: number) {
+    const d = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+    setSelectedDate(d);
+    onChange(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`);
+  }
+
   return (
-    <div className="lp-date-picker" ref={datePickerRef}>
-      <div className="lp-date-trigger" onClick={() => setIsOpen(!isOpen)}>
-        {formatDisplayValue() || placeholder}
-      </div>
+    <div className="lp-date-picker" ref={ref}>
+      <button
+        type="button"
+        className="lp-trigger"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label={placeholder}
+      >
+        {formatDisplayValue() || <span className="lp-placeholder">{placeholder}</span>}
+      </button>
 
       {isOpen && mounted && createPortal(
         <div
@@ -119,32 +111,32 @@ export default function DatePicker({
               <div className="lp-month-nav">
                 <button
                   type="button"
-                  onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
                   aria-label="Previous month"
+                  onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
                 >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M15 18l-6-6 6-6" />
                   </svg>
                 </button>
                 <span>{monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}</span>
                 <button
                   type="button"
-                  onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}
                   aria-label="Next month"
+                  onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}
                 >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M9 18l6-6-6-6" />
                   </svg>
                 </button>
               </div>
 
               <div className="lp-weekdays">
-                {weekDays.map((d, i) => <div key={i} className="lp-weekday">{d}</div>)}
+                {weekDays.map((d, i) => <span key={i}>{d}</span>)}
               </div>
 
               <div className="lp-days">
                 {calendarDays.map((day, i) => {
-                  if (day === null) return <div key={i} className="lp-day lp-day--empty" />;
+                  if (day === null) return <span key={i} className="lp-day lp-day--empty" />;
                   const disabled = isDateDisabled(day);
                   return (
                     <button
@@ -167,12 +159,8 @@ export default function DatePicker({
             </div>
 
             <div className="lp-actions">
-              <button type="button" className="lp-btn lp-btn--cancel" onClick={() => setIsOpen(false)}>
-                CANCEL
-              </button>
-              <button type="button" className="lp-btn lp-btn--ok" onClick={() => setIsOpen(false)}>
-                OK
-              </button>
+              <button type="button" className="lp-btn" onClick={() => setIsOpen(false)}>CANCEL</button>
+              <button type="button" className="lp-btn lp-btn--ok" onClick={() => setIsOpen(false)}>OK</button>
             </div>
           </div>
         </div>,
@@ -182,25 +170,27 @@ export default function DatePicker({
       <style jsx>{`
         .lp-date-picker { width: 100%; position: relative; }
 
-        .lp-date-trigger {
+        .lp-trigger {
           width: 100%;
-          height: 32px;
+          background: transparent;
           border: none;
-          font-size: 14px;
-          font-weight: 500;
           padding: 0;
-          outline: none;
+          font-size: 14px;
+          font-weight: 400;
+          color: #18181b;
           cursor: pointer;
-          display: flex;
-          align-items: center;
-          color: #333;
+          text-align: left;
+          font-family: inherit;
+          line-height: 1.5;
         }
+
+        .lp-placeholder { color: rgba(82, 82, 91, 0.5); font-weight: 300; }
 
         .lp-overlay {
           position: fixed;
           inset: 0;
-          background: rgba(0, 0, 0, 0.5);
           z-index: 999999;
+          background: rgba(0, 0, 0, 0.45);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -208,135 +198,150 @@ export default function DatePicker({
         }
 
         .lp-modal {
-          background: white;
-          border-radius: 8px;
+          background: #fff;
+          border: 1px solid #e4e4e7;
+          border-radius: 22px;
           width: 100%;
-          max-width: 400px;
-          max-height: 90vh;
+          max-width: 320px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-          z-index: 1000000;
+          box-shadow: 0 14px 36px rgba(15, 23, 42, 0.12);
           position: relative;
+          z-index: 1000000;
         }
 
         .lp-header {
-          background: #000;
-          color: white;
-          padding: 20px;
-          text-align: left;
+          background: #f4f4f5;
+          padding: 16px 20px;
         }
 
         .lp-header-year {
-          font-size: 14px;
-          font-weight: 500;
-          opacity: 0.9;
-          margin-bottom: 4px;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: #FF2800;
         }
 
         .lp-header-date {
-          font-size: 18px;
-          font-weight: 600;
+          font-size: 24px;
+          font-weight: 800;
+          color: #18181b;
+          letter-spacing: -0.02em;
+          margin-top: 2px;
         }
 
-        .lp-calendar { padding: 16px; flex: 1; overflow-y: auto; }
+        .lp-calendar { padding: 12px 20px; }
 
         .lp-month-nav {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-bottom: 16px;
+          margin-bottom: 12px;
         }
 
         .lp-month-nav button {
-          width: 40px;
-          height: 40px;
-          border: none;
-          background: transparent;
-          cursor: pointer;
-          display: flex;
+          color: #52525b;
+          width: 32px;
+          height: 32px;
+          display: inline-flex;
           align-items: center;
           justify-content: center;
-          color: #333;
-          border-radius: 50%;
-          transition: background 0.2s;
+          border: 1px solid #e4e4e7;
+          background: #fff;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: border-color 0.15s;
         }
 
-        .lp-month-nav button:hover { background: #f3f4f6; }
+        .lp-month-nav button:hover { border-color: #FF2800; color: #18181b; }
 
         .lp-month-nav span {
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 600;
-          color: #333;
+          color: #18181b;
         }
 
         .lp-weekdays {
           display: grid;
           grid-template-columns: repeat(7, 1fr);
-          gap: 4px;
-          margin-bottom: 8px;
+          text-align: center;
+          margin-bottom: 6px;
         }
 
-        .lp-weekday {
-          text-align: center;
-          font-size: 12px;
+        .lp-weekdays span {
+          font-size: 10px;
           font-weight: 600;
-          color: #6c757d;
-          padding: 8px 0;
+          color: #a1a1aa;
         }
 
         .lp-days {
           display: grid;
           grid-template-columns: repeat(7, 1fr);
-          gap: 4px;
+          text-align: center;
+          gap: 2px;
         }
 
         .lp-day {
-          aspect-ratio: 1;
-          border: none;
-          background: transparent;
-          font-size: 14px;
-          font-weight: 500;
-          color: #333;
-          cursor: pointer;
-          border-radius: 50%;
-          transition: all 0.2s;
-          display: flex;
+          width: 36px;
+          height: 36px;
+          display: inline-flex;
           align-items: center;
           justify-content: center;
-          min-height: 44px;
+          font-size: 14px;
+          font-weight: 500;
+          color: #18181b;
+          transition: all 0.15s;
+          margin: 0 auto;
+          background: transparent;
+          border: 1px solid #e4e4e7;
+          border-radius: 0;
+          cursor: pointer;
         }
 
-        .lp-day--empty { cursor: default; }
-        .lp-day:hover:not(.lp-day--empty):not(.lp-day--disabled) { background: #f3f4f6; }
-        .lp-day--today:not(.lp-day--sel) { background: #e9ecef; font-weight: 600; }
-        .lp-day--sel { background: #FF2800 !important; color: white !important; font-weight: 600; }
-        .lp-day--disabled { color: #ccc; cursor: not-allowed; }
+        .lp-day--empty    { visibility: hidden; border-color: transparent; cursor: default; }
+        .lp-day--disabled { color: #d4d4d8; cursor: not-allowed; border-color: #f4f4f5; }
+        .lp-day--today    { color: #FF2800; font-weight: 700; border-color: rgba(255, 40, 0, 0.35); }
+        .lp-day--sel      { background: #FF2800; color: #fff; border-color: #FF2800; font-weight: 700; border-radius: 0; }
+        .lp-day:not(.lp-day--disabled):not(.lp-day--sel):hover { background: #f4f4f5; border-color: #FF2800; }
 
         .lp-actions {
           display: flex;
-          border-top: 1px solid #e9ecef;
-          padding: 12px 16px;
+          justify-content: flex-end;
+          align-items: center;
           gap: 12px;
+          padding: 10px 16px;
+          border-top: 1px solid #e4e4e7;
         }
 
         .lp-btn {
-          flex: 1;
-          padding: 12px;
-          border: none;
+          box-sizing: border-box;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex: 0 0 110px;
+          width: 110px;
+          min-width: 110px;
+          max-width: 110px;
+          min-height: 36px;
+          max-height: 36px;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #52525b;
+          padding: 8px 10px;
+          border: 1px solid #e4e4e7;
           background: transparent;
-          font-size: 14px;
-          font-weight: 600;
+          border-radius: 12px;
           cursor: pointer;
-          border-radius: 4px;
-          transition: all 0.2s;
+          font-family: inherit;
         }
 
-        .lp-btn--cancel { color: #6c757d; }
-        .lp-btn--cancel:hover { background: #f3f4f6; }
-        .lp-btn--ok { color: #FF2800; }
-        .lp-btn--ok:hover { background: #fff5f3; }
+        .lp-btn:hover         { color: #18181b; }
+        .lp-btn--ok           { color: #fff; background: #FF2800; border-color: #FF2800; }
+        .lp-btn--ok:hover     { background: #ff4d26; border-color: #ff4d26; }
       `}</style>
     </div>
   );

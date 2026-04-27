@@ -1,6 +1,6 @@
 # 📅 Date & Time Picker
 
-**Date & Time Picker** is a set of custom React date and time picker components built for Next.js — available in **light and dark modes**, fully **mobile responsive**, with a custom calendar UI and a Material Design clock powered by [timepicker-ui](https://github.com/pglejzer/timepicker-ui).
+**Date & Time Picker** is a set of custom React date and time picker components built for Next.js, available in **light and dark modes**, fully **mobile responsive**, with a custom calendar UI and a Material Design clock powered by [timepicker-ui](https://github.com/pglejzer/timepicker-ui).
 
 The components were designed and developed by [Jonathan Rycx](https://github.com/Rixouu), extracted from a production driver booking platform.
 
@@ -13,12 +13,11 @@ The components were designed and developed by [Jonathan Rycx](https://github.com
 ## ✨ Key Features
 
 ### 📅 Date Picker
-- Custom calendar grid — no native `<input type="date">` quirks
-- Black header with year + selected date display
+- Custom calendar grid with no native `<input type="date">` quirks
+- Header with accent year label and large bold selected date
 - Month navigation (previous / next)
-- Disables past dates
-- Today highlight
-- Portal-rendered modal — renders outside the component tree via `createPortal`, safe for modals and drawers
+- Disables past dates, highlights today
+- Portal-rendered modal via `createPortal`, safe inside any `overflow: hidden` container
 - Accent color: `#FF2800`
 
 ### 🕐 Time Picker
@@ -27,26 +26,26 @@ The components were designed and developed by [Jonathan Rycx](https://github.com
 - 5-minute increment steps
 - Auto-switch from hours to minutes after selection
 - Keyboard input mode via switch icon
-- Stores value internally as 24h (`HH:mm`) for easy form handling
+- Value stored as 24h `HH:mm` for easy form handling
 
-### 🌗 Light & Dark Modes
-- **Light** — white calendar, black header, red accent
-- **Dark** — dark-first design system with CSS custom properties (`--dj-*` tokens), rounded 22px modal, subtle borders
-- Both share identical UX — same interactions, same output format
+### 🌗 Light and Dark Modes
+- **Light** — white calendar, light gray header, red accent, 22px rounded modal
+- **Dark** — dark-first design system with CSS custom properties (`--dj-*` tokens), 22px rounded modal, subtle borders
+- Both modes share identical UX: same interactions, same output format
 
 ### 📱 Mobile Responsive
-- Modal is centered with `position: fixed` and `max-width: 95vw`
+- Modal centered with `position: fixed` and `max-width: 95vw`
 - Calendar grid adapts to narrow viewports
-- Minimum touch target: `44px` (light) / `36px` (dark) per day cell
+- Minimum touch target 36px per day cell
 
 ## 🛠 Tech Stack
 
 - **Next.js 15** (App Router, `"use client"`)
 - **React 18** with `createPortal` for overlay rendering
-- **TypeScript** — fully typed props
-- **timepicker-ui v4** — Material Design clock face
-- **styled-jsx** — scoped & global CSS-in-JS (built into Next.js)
-- **CSS Custom Properties** — dark theme via `--dj-*` tokens on `:root`
+- **TypeScript** with fully typed props
+- **timepicker-ui v4** for the Material Design clock face
+- **styled-jsx** scoped and global CSS-in-JS (built into Next.js)
+- **CSS Custom Properties** for the dark theme via `--dj-*` tokens on `:root`
 
 ## 🚀 Quick Start
 
@@ -61,7 +60,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see the demo with both light and dark pickers.
+Open [http://localhost:3000](http://localhost:3000) to see the demo with both light and dark pickers side by side.
 
 ### Dependencies
 
@@ -90,7 +89,7 @@ import DatePicker from "@/components/light/DatePicker";
 ```tsx
 import TimePicker from "@/components/light/TimePicker";
 
-// Don't forget to import timepicker-ui CSS once globally:
+// Import timepicker-ui CSS once globally:
 // import "timepicker-ui/main.css";
 
 <TimePicker
@@ -174,7 +173,7 @@ The dark components are driven by CSS custom properties. Set them on `:root` or 
   --dj-text-heading:     #fafafa;
   --dj-border:           #262626;
   --dj-border-subtle:    #1f1f1f;
-  --dj-accent:           #ff2800;   /* ← swap this to rebrand */
+  --dj-accent:           #ff2800;   /* swap this to rebrand */
   --dj-accent-soft:      #ff4d26;
   --dj-accent-muted:     rgba(255, 40, 0, 0.15);
   --dj-on-accent:        #ffffff;
@@ -183,23 +182,28 @@ The dark components are driven by CSS custom properties. Set them on `:root` or 
 }
 ```
 
-To rebrand, change `--dj-accent` and `--dj-on-accent` — every interactive element (selected day, clock hand, AM/PM toggle, OK button) updates automatically.
+Changing `--dj-accent` and `--dj-on-accent` rebrands every interactive element automatically: selected day, clock hand, AM/PM toggle, and OK button.
 
 ## 📁 Project Structure
 
 ```
 date-time-picker/
 ├── app/
-│   ├── layout.tsx           # Root layout
-│   ├── page.tsx             # Demo page (light + dark side by side)
+│   ├── layout.tsx           # Root layout with favicon metadata
+│   ├── page.tsx             # Demo page (light and dark side by side)
 │   └── globals.css          # CSS reset, dark tokens, .bd-* component styles
 ├── components/
 │   ├── light/
 │   │   ├── DatePicker.tsx   # Light date picker (self-contained with styled-jsx)
-│   │   └── TimePicker.tsx   # Light time picker (timepicker-ui + styled-jsx global)
+│   │   └── TimePicker.tsx   # Light time picker (timepicker-ui light theme)
 │   └── dark/
 │       ├── DatePicker.tsx   # Dark date picker (uses .bd-* CSS classes)
 │       └── TimePicker.tsx   # Dark time picker (timepicker-ui dark theme override)
+├── public/
+│   ├── favicon.ico
+│   ├── favicon-16x16.png
+│   ├── favicon-32x32.png
+│   └── apple-touch-icon.png
 ├── next.config.ts
 ├── package.json
 └── tsconfig.json
@@ -216,19 +220,19 @@ npm run start    # Run production server
 ## 🌟 Design Notes
 
 ### Why `createPortal`?
-Both pickers render their modals at `document.body` level. This prevents clipping from parent `overflow: hidden` containers — common in booking forms inside cards or drawers.
+Both pickers render their modals at `document.body` level to prevent clipping from parent `overflow: hidden` containers, which is common in booking forms inside cards or drawers.
 
-### Why 24h output for Time Picker?
-The clock displays 12h (friendlier for users) but stores `HH:mm`. This is easier to sort, compare, and pass to backends without ambiguity.
+### Why 24h output for the Time Picker?
+The clock displays 12h (friendlier for users) but stores `HH:mm` internally. This is easier to sort, compare, and pass to backends without ambiguity.
 
 ### Dark mode portal and CSS tokens
-The dark date picker portal is outside `.bd-page`, so `.bd-dp` re-declares `--bd-*` tokens pointing at `--dj-*` globals on `:root`. No theming library needed.
+The dark date picker portal is outside `.bd-page`, so `.bd-dp` re-declares `--bd-*` tokens pointing at `--dj-*` globals on `:root`. No theming library required.
 
 ## 🤝 Contributing
 
 Contributions welcome. Before opening a PR:
 
-1. Test both light and dark pickers on mobile viewport
+1. Test both light and dark pickers on a mobile viewport
 2. Ensure the time picker syncs correctly when `value` changes externally
 3. Open a PR describing the change
 
@@ -242,4 +246,4 @@ MIT — free to use in personal and commercial projects.
 
 ---
 
-**Built for real booking flows. Extracted for everyone.**
+Built for real booking flows. Extracted for everyone.

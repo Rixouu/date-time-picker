@@ -1,10 +1,10 @@
 # 📅 Date & Time Picker
 
-**Date & Time Picker** is a high-performance, design-token-driven selection system built for **Next.js 15+**. It provides a premium, unified experience for date and time input with zero-compromise stability and deep customization support.
+**Date & Time Picker** is a high-performance, design-token-driven selection system built for **Next.js 16+**. It provides a premium, unified experience for date and time input with zero-compromise stability and deep customization support.
 
 The project is led and developed by [Jonathan Rycx](https://github.com/Rixouu), focusing on professional-grade UI components that bridge the gap between complex library logic and clean React state management.
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-blue)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6)](https://www.typescriptlang.org/)
@@ -20,6 +20,7 @@ The project is led and developed by [Jonathan Rycx](https://github.com/Rixouu), 
 
 ### ⏰ Hybrid Time Engine
 - **Stable Wrapper**: Uses a custom "Hybrid Engine" that isolates the `timepicker-ui` DOM from React's reconciliation, preventing the "disappearing field" bugs common in direct wrappers.
+- **Premium Mobile UI**: Features a custom-styled vertical AM/PM selector with joined borders and high-contrast active states, optimized for touch interaction.
 - **Clock-Face Interaction**: Refined touch and mouse support for intuitive hour/minute selection.
 - **Persistent Instance**: Background library instances are recycled to maintain performance during parent re-renders.
 
@@ -33,8 +34,8 @@ The project is led and developed by [Jonathan Rycx](https://github.com/Rixouu), 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **React 19**: Utilizing the latest concurrent rendering features.
-- **Next.js 15**: App router architecture for optimized routing and loading.
+- **React 19**: Utilizing the latest concurrent rendering and server component features.
+- **Next.js 16**: App router architecture for optimized routing, loading, and streaming.
 - **Tailwind CSS 4**: Modern utility-first styling with high-performance CSS variable integration.
 - **TypeScript 5**: Strict type safety across all component boundaries.
 

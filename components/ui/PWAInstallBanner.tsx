@@ -35,7 +35,7 @@ export function PWAInstallBanner() {
       <div className="pwa-banner-container">
         <div className="pwa-banner-info">
           <div className="pwa-banner-icon">
-            <Download size={24} />
+            <img src="/icon-date-time-picker.png" alt="App Icon" />
           </div>
           <div className="pwa-banner-content">
             <h3>Install Date & Time</h3>

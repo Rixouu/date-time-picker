@@ -93,10 +93,23 @@ export default function TimePicker({
 
     if (value) tp.setValue(formatDisplay(value));
 
+    const handleInputLimit = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      if (target && (target.classList.contains('tp-ui-hour') || target.classList.contains('tp-ui-minutes'))) {
+        const val = target.value.replace(/\D/g, '');
+        if (target.value !== val || val.length > 2) {
+          target.value = val.slice(0, 2);
+        }
+      }
+    };
+
+    document.addEventListener('input', handleInputLimit, true);
+
     return () => {
       tp.destroy();
       tpRef.current = null;
       document.body.classList.remove(`picker-theme-${theme}`);
+      document.removeEventListener('input', handleInputLimit, true);
     };
     // We intentionally only run this on mount. 
     // Updates are handled by the separate effect below.

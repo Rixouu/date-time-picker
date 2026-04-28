@@ -1,0 +1,139 @@
+.pwa-banner-fixed {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 1000;
+  animation: pwa-banner-slide-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pwa-banner-slide-in {
+  from {
+    transform: translateY(100%) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.pwa-banner-container {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(228, 228, 231, 0.5);
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* Dark Mode support using parent class if available, or prefers-color-scheme */
+@media (prefers-color-scheme: dark) {
+  .pwa-banner-container {
+    background: rgba(12, 12, 12, 0.8);
+    border-color: rgba(38, 38, 38, 0.5);
+  }
+}
+
+/* Force dark mode if .dark class is on html/body */
+:is(.dark, .picker-theme-dark) .pwa-banner-container {
+  background: rgba(12, 12, 12, 0.8);
+  border-color: rgba(38, 38, 38, 0.5);
+}
+
+.pwa-banner-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pwa-banner-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #FF2800; /* Use project accent */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 10px 15px -3px rgba(255, 40, 0, 0.3);
+}
+
+.pwa-banner-content h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #18181b;
+}
+
+:is(.dark, .picker-theme-dark) .pwa-banner-content h3 {
+  color: #fafafa;
+}
+
+.pwa-banner-content p {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: #71717a;
+}
+
+.pwa-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pwa-install-btn {
+  background: #FF2800;
+  color: white;
+  border: none;
+  border-radius: 99px;
+  padding: 8px 20px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.pwa-install-btn:active {
+  transform: scale(0.95);
+}
+
+.pwa-close-btn {
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.pwa-close-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #18181b;
+}
+
+:is(.dark, .picker-theme-dark) .pwa-close-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fafafa;
+}
+
+.pwa-ios-instructions {
+  font-size: 10px;
+  color: #71717a;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pwa-ios-instructions svg {
+  color: #FF2800;
+}

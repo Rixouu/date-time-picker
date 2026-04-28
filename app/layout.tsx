@@ -30,6 +30,8 @@ export const viewport: Viewport = {
   themeColor: "#000000",
 };
 
+import { PWAInstallBanner } from "@/components/ui/PWAInstallBanner";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={outfit.className}>
@@ -38,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body style={{ margin: 0 }}>
         {children}
+        <PWAInstallBanner />
       </body>
     </html>
   );

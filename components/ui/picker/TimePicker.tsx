@@ -66,7 +66,7 @@ export default function TimePicker({
     const tp = new TimepickerUI(inputRef.current, {
       ui: { 
         theme: "basic", 
-        mobile: false, 
+        mobile: true, 
         enableSwitchIcon: true, 
         backdrop: true, 
         animation: true 
@@ -108,7 +108,7 @@ export default function TimePicker({
     if (tpRef.current) {
       tpRef.current.update({
         options: {
-          ui: { theme: "basic" }, // Library requires options object
+          ui: { theme: "basic", mobile: true }, // Library requires options object
           callbacks: {
             onConfirm: parseTo24,
             onOpen: () => {

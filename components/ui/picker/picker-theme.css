@@ -226,10 +226,10 @@
 .tp-ui-header {
   background: var(--picker-surface) !important;
   border-bottom: 1px solid var(--picker-border) !important;
-  padding: 24px 20px 20px !important;
+  padding: 24px 20px 24px !important;
   height: auto !important;
   display: flex !important;
-  align-items: center !important;
+  align-items: flex-start !important;
   justify-content: center !important;
   gap: 8px !important;
 }
@@ -264,6 +264,22 @@
   box-shadow: none !important;
 }
 
+.tp-ui-dots {
+  height: 80px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.tp-ui-input-wrapper,
+.tp-ui-input-ripple-wrapper {
+  overflow: visible !important;
+}
+
+.tp-ui-hour-text,
+.tp-ui-minute-text {
+  padding-top: 8px !important;
+}
+
 /* ============================================================ */
 /* TIME PICKER — clock face                                     */
 /* ============================================================ */
@@ -279,20 +295,60 @@
 .tp-ui-value-tips-24h.active { color: var(--picker-on-accent) !important; }
 
 /* ============================================================ */
-/* TIME PICKER — AM / PM                                        */
+/* TIME PICKER — AM / PM (Mobile Fix)                           */
 /* ============================================================ */
 
-.tp-ui-am,
-.tp-ui-pm {
-  color: var(--picker-text-muted) !important;
-  border-color: var(--picker-border) !important;
+/* The actual wrapper for AM and PM in mobile mode */
+.mobile .tp-ui-wrapper-type-time {
+  display: flex !important;
+  flex-direction: column !important;
+  border: 1px solid var(--picker-border) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  height: 80px !important;
+  width: 52px !important;
+  margin-left: 12px !important;
+  background: var(--picker-bg) !important;
 }
 
-.tp-ui-am.active,
-.tp-ui-pm.active {
-  background-color: var(--picker-accent) !important;
-  color: var(--picker-on-accent) !important;
-  border-color: var(--picker-accent) !important;
+.mobile .tp-ui-am,
+.mobile .tp-ui-pm {
+  height: 50% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--picker-text-muted) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all var(--picker-transition) !important;
+}
+
+/* Divider between AM and PM */
+.mobile .tp-ui-am {
+  border-bottom: 1px solid var(--picker-border) !important;
+}
+
+/* Active state: light background + accent text */
+.mobile .tp-ui-am.active,
+.mobile .tp-ui-pm.active {
+  background-color: color-mix(in srgb, var(--picker-accent), transparent 85%) !important;
+  color: var(--picker-accent) !important;
+}
+
+.mobile .tp-ui-am:hover,
+.mobile .tp-ui-pm:hover {
+  background-color: var(--picker-surface) !important;
+}
+
+.mobile .tp-ui-am.active:hover,
+.mobile .tp-ui-pm.active:hover {
+  background-color: color-mix(in srgb, var(--picker-accent), transparent 75%) !important;
 }
 
 /* ============================================================ */

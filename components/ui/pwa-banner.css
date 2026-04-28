@@ -32,19 +32,7 @@
   gap: 16px;
 }
 
-/* Dark Mode support using parent class if available, or prefers-color-scheme */
-@media (prefers-color-scheme: dark) {
-  .pwa-banner-container {
-    background: rgba(12, 12, 12, 0.8);
-    border-color: rgba(38, 38, 38, 0.5);
-  }
-}
 
-/* Force dark mode if .dark class is on html/body */
-:is(.dark, .picker-theme-dark) .pwa-banner-container {
-  background: rgba(12, 12, 12, 0.8);
-  border-color: rgba(38, 38, 38, 0.5);
-}
 
 .pwa-banner-info {
   display: flex;
@@ -73,13 +61,13 @@
   margin: 0;
   font-size: 14px;
   font-weight: 700;
-  color: #18181b;
+  color: #18181b !important;
 }
 
 .pwa-banner-content p {
   margin: 2px 0 0;
   font-size: 11px;
-  color: #71717a;
+  color: #71717a !important;
 }
 
 .pwa-banner-actions {

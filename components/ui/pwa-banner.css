@@ -19,12 +19,12 @@
 }
 
 .pwa-banner-container {
-  background: rgba(15, 15, 15, 0.85);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 20px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
   padding: 16px;
   display: flex;
   align-items: center;
@@ -73,13 +73,13 @@
   margin: 0;
   font-size: 14px;
   font-weight: 700;
-  color: #ffffff;
+  color: #18181b;
 }
 
 .pwa-banner-content p {
   margin: 2px 0 0;
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.6);
+  color: #71717a;
 }
 
 .pwa-banner-actions {

@@ -130,7 +130,7 @@ export default function TimePicker({
   }, [value]);
 
   return (
-    <div className={`picker-container ${className} tp-ui`} ref={containerRef}>
+    <div className={`picker-container picker-theme-${theme} ${className} tp-ui`} ref={containerRef}>
       {/* Hidden input for the library to attach to. 
           We use absolute positioning and 0 opacity so the library can still 
           calculate positions but it doesn't interfere with our layout. */}
